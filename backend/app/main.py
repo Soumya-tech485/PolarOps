@@ -10,12 +10,15 @@ from . import models, schemas
 from .auth import verify_password, create_access_token, require_role, get_current_user
 from .seed import seed_db
 from .forecast import forecast_item, what_if_report, optimize_packing
+import os
 
 app = FastAPI(title="PolarOps API")
 
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[FRONTEND_URL, "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
