@@ -20,9 +20,7 @@ export function logout() {
 export async function login(email, password) {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
 
@@ -32,23 +30,16 @@ export async function login(email, password) {
   }
 
   const data = await response.json();
-
   localStorage.setItem("polarops_token", data.access_token);
   localStorage.setItem("polarops_user", JSON.stringify({
-    name: data.name,
-    email: data.email,
-    role: data.role
+    name: data.name, email: data.email, role: data.role
   }));
-
   return data;
 }
 
 export async function apiFetch(path, options = {}) {
   const token = getToken();
-
-  const headers = {
-    ...(options.headers || {})
-  };
+  const headers = { ...(options.headers || {}) };
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
@@ -58,10 +49,11 @@ export async function apiFetch(path, options = {}) {
     headers["Content-Type"] = "application/json";
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers
-  });
+  const response = await fetch(`${API_URL}${path}`, { ...options, headers });
+
+  if (response.status === 403) {
+    throw new Error("Access denied: insufficient permissions");
+  }
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: "Request failed" }));

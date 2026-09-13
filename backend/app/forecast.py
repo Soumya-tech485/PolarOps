@@ -56,6 +56,46 @@ def priority_score(item: models.Item, risk: str) -> int:
     return score
 
 
+def calculate_airdrop_payload(db: Session, station: models.Station, days_to_cover: int) -> list:
+    """Calculate emergency air-drop payload based on personnel count."""
+    personnel_count = db.query(models.Personnel).filter(
+        models.Personnel.station_id == station.id,
+        models.Personnel.status == "on_station"
+    ).count()
+
+    if personnel_count == 0:
+        personnel_count = 30  # default assumption
+
+    airdrop_items = []
+
+    critical_items = db.query(models.Item).filter(
+        models.Item.station_id == station.id,
+        models.Item.criticality.in_(["critical", "high"])
+    ).all()
+
+    for item in critical_items:
+        if item.category.lower() == "food":
+            quantity = personnel_count * days_to_cover * 2  # 2 meals/day
+        elif item.category.lower() == "fuel":
+            quantity = days_to_cover * 300  # 300L/day station baseline
+        elif item.category.lower() == "medical":
+            quantity = max(10, personnel_count // 5)
+        else:
+            quantity = 0
+
+        if quantity > 0:
+            airdrop_items.append({
+                "item_id": item.id,
+                "name": item.name,
+                "quantity": quantity,
+                "unit": item.unit,
+                "weight_kg": quantity * (item.weight_per_unit_kg or 0.85),
+                "reason": f"Emergency supply for {personnel_count} personnel over {days_to_cover} days"
+            })
+
+    return airdrop_items
+
+
 def forecast_item(
     db: Session,
     item: models.Item,
@@ -93,14 +133,21 @@ def forecast_item(
     else:
         risk = "low"
 
-    if item.current_stock <= item.safety_stock:
-        reason = "Stock is at or below safety stock."
-    elif stockout_date and stockout_date < adjusted_resupply:
-        reason = f"Projected stockout before adjusted resupply on {adjusted_resupply.isoformat()}."
-    elif days_remaining <= 30:
-        reason = "Stock buffer is below 30 days."
+    # Generate recommended action
+    recommended_action = ""
+    if risk == "critical":
+        if days_remaining == 0:
+            recommended_action = f"URGENT: {item.name} is below safety stock. Immediate resupply required."
+        else:
+            recommended_action = f"Prioritize {item.name} in next shipment. Stockout in {int(days_remaining)} days."
+    elif risk == "high":
+        shortfall = (adjusted_resupply - today).days - days_remaining
+        extra_needed = shortfall * avg_daily_consumption
+        recommended_action = f"Add ~{int(extra_needed)} {item.unit} of {item.name} to next shipment to cover delay."
+    elif risk == "medium":
+        recommended_action = f"Monitor {item.name}. Consider adding to next routine shipment."
     else:
-        reason = "Stock level is sufficient for current planning window."
+        recommended_action = f"{item.name} stock is sufficient. No action required."
 
     recommended_quantity = 0
 
@@ -124,7 +171,7 @@ def forecast_item(
         "next_resupply_date": station.next_resupply_date.isoformat() if station.next_resupply_date else None,
         "adjusted_resupply_date": adjusted_resupply.isoformat(),
         "risk": risk,
-        "reason": reason,
+        "recommended_action": recommended_action,
         "recommended_quantity": recommended_quantity
     }
 
@@ -175,7 +222,7 @@ def what_if_report(db: Session, station: models.Station, delay_days: int):
                 "risk": forecast["risk"],
                 "priority_score": forecast["priority_score"],
                 "recommended_quantity": forecast["recommended_quantity"],
-                "reason": forecast["reason"]
+                "recommended_action": forecast["recommended_action"]
             })
 
     recommended_cargo.sort(key=lambda x: -x["priority_score"])
@@ -201,6 +248,12 @@ def what_if_report(db: Session, station: models.Station, delay_days: int):
 
     adjusted_resupply = station.next_resupply_date + timedelta(days=delay_days)
 
+    # Air-drop calculator (emergency scenario)
+    airdrop_payload = []
+    if delay_days >= 30:
+        days_to_cover = delay_days
+        airdrop_payload = calculate_airdrop_payload(db, station, days_to_cover)
+
     return {
         "station": station.name,
         "delay_days": delay_days,
@@ -209,5 +262,75 @@ def what_if_report(db: Session, station: models.Station, delay_days: int):
         "affected_assets": affected_assets,
         "critical_items": critical_items,
         "recommended_cargo": recommended_cargo,
-        "all_items": forecasts
+        "all_items": forecasts,
+        "emergency_airdrop": airdrop_payload
+    }
+
+
+def optimize_packing(db: Session, item_requests: list, capacity_kg: float, capacity_volume: float) -> dict:
+    """
+    Greedy knapsack approximation for cargo packing optimization.
+    Maximizes priority score per kg/volume.
+    """
+    # Build candidate list with priority scores
+    candidates = []
+
+    for req in item_requests:
+        item = db.query(models.Item).filter(models.Item.id == req.item_id).first()
+        if not item:
+            continue
+
+        weight_kg = req.quantity * (item.weight_per_unit_kg or 0.85)
+        volume_m3 = req.quantity * (item.volume_per_unit_m3 or 0.001)
+
+        # Calculate priority score for this item
+        forecast = forecast_item(db, item, db.query(models.Station).first(), 0)
+        p_score = priority_score(item, forecast["risk"])
+
+        candidates.append({
+            "item_id": item.id,
+            "name": item.name,
+            "category": item.category,
+            "unit": item.unit,
+            "requested_quantity": req.quantity,
+            "weight_kg": weight_kg,
+            "volume_m3": volume_m3,
+            "priority_score": p_score,
+            "risk": forecast["risk"],
+            "density_score": p_score / max(weight_kg, 0.01)  # priority per kg
+        })
+
+    # Sort by density_score (priority per kg) descending
+    candidates.sort(key=lambda x: -x["density_score"])
+
+    # Greedy packing
+    packed = []
+    remaining_weight = capacity_kg
+    remaining_volume = capacity_volume
+    total_priority = 0
+    stow_position = 1
+
+    for candidate in candidates:
+        if candidate["weight_kg"] <= remaining_weight and candidate["volume_m3"] <= remaining_volume:
+            candidate["stow_position"] = stow_position
+            packed.append(candidate)
+            remaining_weight -= candidate["weight_kg"]
+            remaining_volume -= candidate["volume_m3"]
+            total_priority += candidate["priority_score"]
+            stow_position += 1
+
+    utilization = {
+        "weight_used_kg": capacity_kg - remaining_weight,
+        "weight_capacity_kg": capacity_kg,
+        "weight_utilization_pct": round((capacity_kg - remaining_weight) / capacity_kg * 100, 1),
+        "volume_used_m3": capacity_volume - remaining_volume,
+        "volume_capacity_m3": capacity_volume,
+        "volume_utilization_pct": round((capacity_volume - remaining_volume) / capacity_volume * 100, 1),
+        "total_priority_score": total_priority
+    }
+
+    return {
+        "packed_items": packed,
+        "utilization": utilization,
+        "items_rejected": len(item_requests) - len(packed)
     }
