@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://polarops-api-6ki8.onrender.com/";
+const API_URL ="https://polarops-api-6ki8.onrender.com";
 
 export function getToken() {
   return localStorage.getItem("polarops_token");
