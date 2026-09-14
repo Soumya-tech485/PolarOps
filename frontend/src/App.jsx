@@ -251,10 +251,10 @@ function Dashboard() {
 
       {data.station && (
         <div className="panel">
-          <h2>🗺️ Station Location & Supply Route</h2>
+          <h2>🗺️ Supply Route: Goa → Cape Town → Antarctica</h2>
           <div style={{ height: "300px", borderRadius: "12px", overflow: "hidden" }}>
             <MapContainer
-              center={[-50, 40]}
+              center={[-25, 45]}
               zoom={2}
               style={{ height: "100%", width: "100%" }}
             >
@@ -262,14 +262,24 @@ function Dashboard() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; OpenStreetMap contributors'
               />
+              <Marker position={[15.4909, 73.8278]}>
+                <Popup>Goa, India — NCPOR HQ (Cargo & Team Origin)</Popup>
+              </Marker>
               <Marker position={[-33.92, 18.42]}>
-                <Popup>Cape Town (Origin)</Popup>
+                <Popup>Cape Town — Ship Embarkation Port</Popup>
               </Marker>
               <Marker position={[data.station.latitude, data.station.longitude]}>
                 <Popup>{data.station.name}</Popup>
               </Marker>
               <Polyline
-                positions={[[-33.92, 18.42], [-50, 40], [data.station.latitude, data.station.longitude]]}
+                positions={[
+                  [15.4909, 73.8278],
+                  [0, 60],
+                  [-33.92, 18.42],
+                  [-50, 40],
+                  [-60, 60],
+                  [data.station.latitude, data.station.longitude]
+                ]}
                 color="#0ea5e9"
                 dashArray="10, 5"
               />
@@ -698,6 +708,7 @@ function Indents() {
   }
 
   async function processIndent(indent, action) {
+    setError(""); setMessage("");
     try {
       const res = await apiFetch(`/indents/${indent.id}/${action}`, { method: "POST" });
       setMessage(res.message);
@@ -1104,7 +1115,7 @@ function PackingOptimizer() {
 
   function updateSelected(index, field, value) {
     const updated = [...selectedItems];
-    updated[index][field] = field === "item_id" ? Number(value) : Number(value);
+    updated[index][field] = Number(value);
     setSelectedItems(updated);
   }
 
@@ -1135,7 +1146,7 @@ function PackingOptimizer() {
 
   return (
     <div>
-      <h1 className="page-title">Smart Packing Optimizer (MILP Knapsack)</h1>
+      <h1 className="page-title">Smart Packing Optimizer (Knapsack)</h1>
       <p className="page-subtitle">
         Optimize cargo loading to maximize priority score within ship capacity limits
       </p>
