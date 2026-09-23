@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TABLE users(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
+  password_hash TEXT NOT NULL, -- change required
   role TEXT NOT NULL CHECK(role IN('admin','station_lead','logistics_officer','medical_officer','member')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
@@ -37,10 +37,10 @@ CREATE TABLE assets(
 CREATE TABLE voyages(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
-  departure_station TEXT,
-  arrival_station TEXT,
   departure_station_id UUID REFERENCES stations(id),
   arrival_station_id UUID REFERENCES stations(id),
+  departure_station TEXT REFERENCES stations(name),
+  arrival_station TEXT REFERENCES stations(name),
   departure_date DATE,
   arrival_date DATE,
   route GEOMETRY(LineString, 4326),
@@ -68,6 +68,7 @@ CREATE TABLE cargo_items(
 CREATE TABLE consumption_events(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   cargo_item_id UUID REFERENCES cargo_items(id),
+  station_id UUID REFERENCES stations(id), -- Added missing relation
   quantity_used NUMERIC NOT NULL,
   logged_by UUID REFERENCES personnel(id),
   logged_at TIMESTAMPTZ DEFAULT now()
@@ -76,7 +77,8 @@ CREATE TABLE consumption_events(
 CREATE TABLE emergency_events(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   reported_by UUID REFERENCES personnel(id),
-  station_id UUID REFERENCES stations(id),
+  station_id UUID REFERENCES stations(id),\
+  location GEOMETRY(Point, 4326), -- Added missing spatial tracking
   status TEXT DEFAULT 'open' CHECK(status IN('open','acknowledged','escalated','resolved')),
   description TEXT,
   created_at TIMESTAMPTZ DEFAULT now(),
