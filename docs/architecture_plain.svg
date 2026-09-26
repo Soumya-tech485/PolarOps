@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1160" viewBox="0 0 1600 1160" font-family="Segoe UI, Arial, sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<rect width="1600" height="1160" fill="#ffffff"/>
+<text x="800" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#1f3350">PolarOps (SIH26062) - System Architecture and Process Flowchart, plain-language edition</text>
+
+<g fill="none" stroke="#a8a8a8" stroke-width="1.1">
+<polyline points="50,98 42,98"/><polyline points="50,142 42,142"/><polyline points="50,186 42,186"/><polyline points="50,230 42,230"/><polyline points="42,98 42,278"/><polyline points="42,278 46,278" marker-end="url(#ah)"/>
+<polyline points="340,256 340,120" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+<polyline points="430,278 470,278 470,90 512,90" marker-end="url(#ah)"/>
+<polyline points="630,110 630,220" marker-end="url(#ah)"/>
+<polyline points="630,256 630,258" marker-end="url(#ah)"/><polyline points="630,294 630,296" marker-end="url(#ah)"/>
+<polyline points="744,278 796,278" marker-end="url(#ah)"/>
+<polyline points="744,316 770,316 770,350 1200,350 1200,312 1232,312" marker-end="url(#ah)"/>
+<polyline points="990,340 990,370 614,370 614,386" marker-end="url(#ah)"/>
+<polyline points="820,390 820,378 1060,378 1060,344" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+<polyline points="1180,190 1232,190" marker-end="url(#ah)"/>
+<polyline points="1395,340 1395,386" marker-end="url(#ah)"/>
+<polyline points="930,514 1190,514 1190,566 1232,566" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+<polyline points="460,600 960,600 960,344" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+<polyline points="1395,360 1395,34 488,34 488,142 234,142" marker-end="url(#ah)"/>
+<polyline points="180,720 206,720" marker-end="url(#ah)"/><polyline points="360,720 386,720" marker-end="url(#ah)"/><polyline points="540,720 554,720" marker-end="url(#ah)"/>
+<polyline points="610,746 610,776" marker-end="url(#ah)"/><polyline points="662,720 696,720" marker-end="url(#ah)"/>
+<polyline points="850,720 876,720" marker-end="url(#ah)"/><polyline points="1030,720 1044,720" marker-end="url(#ah)"/>
+<polyline points="1100,746 1100,776" marker-end="url(#ah)"/><polyline points="1190,797 1275,797 1275,744" marker-end="url(#ah)"/>
+<polyline points="1152,720 1196,720" marker-end="url(#ah)"/><polyline points="1350,720 1376,720" marker-end="url(#ah)"/>
+<polyline points="1455,740 1455,752" marker-end="url(#ah)"/>
+<polyline points="560,797 465,797 465,744" marker-end="url(#ah)"/>
+<polyline points="230,985 256,985" marker-end="url(#ah)"/><polyline points="430,985 448,985" marker-end="url(#ah)"/>
+<polyline points="548,985 576,985" marker-end="url(#ah)"/><polyline points="500,1009 500,1030 890,1030 890,1009" marker-end="url(#ah)"/>
+<polyline points="680,965 680,920 1300,920 1300,624" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+</g>
+<g font-size="7" font-style="italic" fill="#888">
+<text x="348" y="200">reads local copy</text><text x="466" y="180" text-anchor="end">when internet returns</text><text x="636" y="170">arrives at server</text>
+<text x="762" y="272">allowed in</text><text x="880" y="346">stamps every action</text><text x="700" y="364">asks the brain</text>
+<text x="830" y="372">answers with numbers</text><text x="1200" y="204" text-anchor="middle">reads/writes</text><text x="1400" y="364">feeds dashboards</text>
+<text x="940" y="508">alerts and what-if results</text><text x="600" y="594">future connectors</text>
+<text x="1120" y="30">Goa decisions become new orders at the station</text>
+<text x="616" y="766">no</text><text x="668" y="712">yes</text><text x="1106" y="766">no</text><text x="1158" y="712">yes</text><text x="1200" y="790">when back online</text>
+<text x="512" y="792">next ship planned</text>
+<text x="554" y="1000">yes</text><text x="700" y="1024">no</text><text x="900" y="914">lands on Goa dashboard</text>
+</g>
+
+<g stroke-width="1.4" fill="#f3fbf5" stroke="#9fd4ae"><rect x="30" y="40" width="430" height="300" rx="12"/></g>
+<g stroke-width="1.4" fill="#f3f8fd" stroke="#9ec4e8"><rect x="500" y="40" width="260" height="140" rx="12"/><rect x="30" y="660" width="1540" height="250" rx="12"/></g>
+<g stroke-width="1.4" fill="#f2fbf9" stroke="#96cec4"><rect x="500" y="200" width="260" height="140" rx="12"/></g>
+<g stroke-width="1.4" fill="#f8f5fd" stroke="#c9b4e4"><rect x="800" y="40" width="380" height="300" rx="12"/><rect x="30" y="930" width="1540" height="120" rx="12"/></g>
+<g stroke-width="1.4" fill="#fdf6f3" stroke="#e4b09c"><rect x="500" y="360" width="430" height="260" rx="12"/></g>
+<g stroke-width="1.4" fill="#faf3e3" stroke="#9c6b1e"><rect x="1220" y="40" width="350" height="300" rx="12"/></g>
+<g stroke-width="1.4" fill="#f3fbf5" stroke="#9fd4ae"><rect x="1220" y="360" width="350" height="260" rx="12"/></g>
+<rect x="30" y="360" width="430" height="260" rx="12" fill="#fdf4f8" stroke="#e4aec4" stroke-width="1.4" stroke-dasharray="6,4"/>
+
+<g font-size="12" font-weight="700">
+<text x="46" y="64" fill="#2a8048">1 - AT THE STATION (works with NO internet)</text>
+<text x="516" y="62" fill="#3873b0">2 - THE MESSAGE ROAD</text>
+<text x="516" y="220" fill="#2a8074">3 - THE GATEKEEPER</text>
+<text x="816" y="64" fill="#7048b0">4 - THE OFFICE (12 service desks)</text>
+<text x="516" y="382" fill="#b04828">5 - THE BRAIN (math that explains itself)</text>
+<text x="1236" y="64" fill="#9c6b1e">6 - THE MEMORY (one truth for all)</text>
+<text x="1236" y="382" fill="#2a8048">7 - GOA COMMAND (seeing everything)</text>
+<text x="46" y="382" fill="#b03868">8 - OUTSIDE FRIENDS (connect later)</text>
+<text x="46" y="684" fill="#3873b0">PROCESS FLOWCHART - ONE BOX'S JOURNEY (follow 43 to 52)</text>
+<text x="46" y="952" fill="#7048b0">EVERY NIGHT, AUTOMATICALLY (nobody presses anything)</text>
+</g>
+
+<g fill="#fff" stroke="#bdbdbd" stroke-width="1.2">
+<rect x="50" y="80" width="180" height="36" rx="6"/><rect x="50" y="124" width="180" height="36" rx="6"/><rect x="50" y="168" width="180" height="36" rx="6"/>
+<rect x="250" y="80" width="180" height="36" rx="6"/>
+<rect x="516" y="70" width="228" height="40" rx="6"/><rect x="516" y="116" width="228" height="26" rx="6"/>
+<rect x="516" y="224" width="228" height="32" rx="6"/><rect x="516" y="262" width="228" height="32" rx="6"/><rect x="516" y="300" width="228" height="32" rx="6"/>
+<rect x="816" y="76" width="112" height="34" rx="6"/><rect x="938" y="76" width="112" height="34" rx="6"/><rect x="1060" y="76" width="112" height="34" rx="6"/><rect x="816" y="118" width="112" height="34" rx="6"/><rect x="938" y="118" width="112" height="34" rx="6"/><rect x="1060" y="118" width="112" height="34" rx="6"/><rect x="816" y="160" width="112" height="34" rx="6"/><rect x="938" y="160" width="112" height="34" rx="6"/><rect x="1060" y="160" width="112" height="34" rx="6"/><rect x="816" y="202" width="112" height="34" rx="6"/><rect x="938" y="202" width="112" height="34" rx="6"/><rect x="1060" y="202" width="112" height="34" rx="6"/>
+<rect x="516" y="390" width="196" height="40" rx="6"/><rect x="724" y="390" width="190" height="40" rx="6"/><rect x="516" y="442" width="196" height="40" rx="6"/><rect x="724" y="442" width="190" height="40" rx="6"/><rect x="516" y="494" width="398" height="40" rx="6"/>
+<rect x="1236" y="72" width="318" height="36" rx="6"/><rect x="1236" y="116" width="318" height="36" rx="6"/><rect x="1236" y="160" width="318" height="36" rx="6"/><rect x="1236" y="204" width="318" height="36" rx="6"/><rect x="1236" y="248" width="318" height="36" rx="6"/>
+<rect x="1236" y="390" width="318" height="40" rx="6"/><rect x="1236" y="442" width="318" height="40" rx="6"/><rect x="1236" y="494" width="318" height="40" rx="6"/><rect x="1236" y="546" width="318" height="40" rx="6"/>
+<rect x="210" y="700" width="150" height="40" rx="6"/><rect x="390" y="700" width="150" height="40" rx="6"/><rect x="700" y="700" width="150" height="40" rx="6"/><rect x="880" y="700" width="150" height="40" rx="6"/><rect x="1200" y="700" width="150" height="40" rx="6"/>
+<rect x="60" y="965" width="170" height="40" rx="6"/><rect x="260" y="965" width="170" height="40" rx="6"/><rect x="810" y="965" width="160" height="40" rx="6"/>
+</g>
+<g stroke-width="1.2">
+<rect x="50" y="212" width="180" height="36" rx="6" fill="#fde8e8" stroke="#e0a0a0"/>
+<rect x="50" y="256" width="380" height="44" rx="6" fill="#eaf3fb" stroke="#8fb8dc"/>
+<rect x="1236" y="292" width="318" height="40" rx="6" fill="#f3e8cf" stroke="#9c6b1e"/>
+<rect x="46" y="392" width="196" height="40" rx="6" fill="#fff" stroke="#bdbdbd" stroke-dasharray="5,4"/><rect x="254" y="392" width="190" height="40" rx="6" fill="#fff" stroke="#bdbdbd" stroke-dasharray="5,4"/><rect x="46" y="444" width="196" height="40" rx="6" fill="#fff" stroke="#bdbdbd" stroke-dasharray="5,4"/><rect x="254" y="444" width="190" height="40" rx="6" fill="#fff" stroke="#bdbdbd" stroke-dasharray="5,4"/>
+<rect x="560" y="780" width="140" height="34" rx="6" fill="#f0f0f0" stroke="#bdbdbd"/>
+<rect x="1040" y="780" width="150" height="34" rx="6" fill="#eaf3fb" stroke="#8fb8dc"/>
+<rect x="1380" y="700" width="150" height="40" rx="6" fill="#f0f0f0" stroke="#bdbdbd"/>
+<rect x="580" y="965" width="200" height="40" rx="6" fill="#fde8e8" stroke="#e0a0a0"/>
+<ellipse cx="110" cy="720" rx="70" ry="26" fill="#eaf3fb" stroke="#8fb8dc"/>
+<ellipse cx="1480" cy="780" rx="70" ry="24" fill="#d9f0de" stroke="#8cc49c"/>
+<path d="M610,694 L662,720 L610,746 L558,720 Z" fill="#f9e0ec" stroke="#d48cab"/>
+<path d="M1100,694 L1152,720 L1100,746 L1048,720 Z" fill="#f9e0ec" stroke="#d48cab"/>
+<path d="M500,961 L548,985 L500,1009 L452,985 Z" fill="#f9e0ec" stroke="#d48cab"/>
+</g>
+
+<g font-size="8.5" font-weight="600" fill="#222" text-anchor="middle">
+<text x="140" y="96">Log what was used</text><text x="140" y="140">Ask for more supplies</text><text x="140" y="184">Report a broken machine</text><text x="140" y="228">Press SOS in danger</text>
+<text x="240" y="276">The app saves everything safely</text><text x="340" y="96">See my stock and alerts</text>
+<text x="630" y="88">Wait for signal, then send</text><text x="630" y="132" font-size="7.5">Keep-alive ping every 10 min</text>
+<text x="630" y="238">Check password, give badge</text><text x="630" y="276">Check role at every door</text><text x="630" y="314">Stamp action in the diary</text>
+<text x="872" y="95" font-size="8">Login desk</text><text x="994" y="95" font-size="8">Stock desk</text><text x="1116" y="95" font-size="8">Requests desk</text>
+<text x="872" y="137" font-size="8">Ship-loading desk</text><text x="994" y="137" font-size="8">Voyages desk</text><text x="1116" y="137" font-size="8">People desk</text>
+<text x="872" y="179" font-size="8">Machines desk</text><text x="994" y="179" font-size="8">Emergency desk</text><text x="1116" y="179" font-size="8">Forecast desk</text>
+<text x="872" y="221" font-size="8">Packing desk</text><text x="994" y="221" font-size="8">Sync inbox desk</text><text x="1116" y="221" font-size="8">Diary read desk</text>
+<text x="614" y="408">Guess usage speed per item</text><text x="819" y="408">Warn what runs out first</text>
+<text x="614" y="460">Pack ship like a perfect suitcase</text><text x="819" y="460">Refuse broken machines</text>
+<text x="715" y="512">Watch SOS: 48h silence - call rescue</text>
+<text x="1395" y="88">Shelves: stock and supplies</text><text x="1395" y="132">People and ships records</text><text x="1395" y="176">Requests and QR labels</text>
+<text x="1395" y="220">Machines and repairs</text><text x="1395" y="264">Emergencies folder</text><text x="1395" y="310">Permanent diary (cannot erase)</text>
+<text x="1395" y="408">All-stations risk map</text><text x="1395" y="460">What-if: ship delayed N days?</text>
+<text x="1395" y="512">When two devices disagree</text><text x="1395" y="564">Prove nobody cheated</text>
+<text x="144" y="410" font-size="8">Old NCPOR system</text><text x="349" y="410" font-size="8">Flight schedule feed</text>
+<text x="144" y="462" font-size="8">Rescue beacon pattern</text><text x="349" y="462" font-size="8">Offline map tiles</text>
+<text x="285" y="718">Log the need</text><text x="465" y="718">Goa approves, picks ship</text><text x="775" y="718">Pack + print QR label</text>
+<text x="955" y="718">Ship sails, tracked on map</text><text x="1275" y="718">Scan QR, stock updates</text><text x="1455" y="718">Diary stamps journey</text>
+<text x="630" y="795" font-size="8">Wait for next ship</text><text x="1115" y="795" font-size="8">App queues the scan</text>
+<text x="145" y="983">Count yesterday's usage</text><text x="345" y="983">Re-guess stockout dates</text>
+<text x="680" y="983">Alert Goa + suggest air-drop</text><text x="890" y="983">Sleep till tomorrow</text>
+<text x="110" y="716" font-size="8">Station notices</text><text x="110" y="728" font-size="8">stock is low</text>
+<text x="1480" y="776" font-size="8">Shelves full,</text><text x="1480" y="788" font-size="8">proof saved</text>
+<text x="610" y="723" font-size="8">Room in ship?</text><text x="1100" y="723" font-size="8">Internet there?</text><text x="500" y="988" font-size="8">Critical?</text>
+</g>
+<g font-size="6.8" fill="#666" text-anchor="middle">
+<text x="140" y="108">consumption entry</text><text x="140" y="152">indent request</text><text x="140" y="196">asset fault</text><text x="140" y="240">emergency button</text>
+<text x="240" y="290">offline queue (Dexie outbox) - nothing is lost</text><text x="340" y="108">works with no internet</text>
+<text x="630" y="100">auto-flush on reconnect</text>
+<text x="630" y="250">login (JWT)</text><text x="630" y="288">RBAC guard</text><text x="630" y="326">audit middleware</text>
+<text x="614" y="420">Croston/SBA + 30-day average</text><text x="819" y="420">risk tiers vs ship ETA</text>
+<text x="614" y="472">OR-Tools CP-SAT math</text><text x="819" y="472">maintenance-linked rule</text>
+<text x="715" y="524">state machine + hourly check</text>
+<text x="1395" y="100">cargo_items + consumption_events</text><text x="1395" y="144">personnel, voyages, assignments</text>
+<text x="1395" y="188">indents lifecycle</text><text x="1395" y="232">assets + maintenance flags</text><text x="1395" y="276">emergency_events</text>
+<text x="1395" y="322">audit_log, hash-chained</text>
+<text x="1395" y="420">Goa command dashboard</text><text x="1395" y="472">simulator slider</text>
+<text x="1395" y="524">conflict review screen</text><text x="1395" y="576">verify hash chain button</text>
+<text x="144" y="422">unify, not replace (later)</text><text x="349" y="422">DROMLAN (later)</text>
+<text x="144" y="474">COSPAS-SARSAT (mirrored)</text><text x="349" y="474">OSM cache (works now)</text>
+<text x="990" y="320" font-size="7" font-style="italic">each desk = one API route file</text>
+<text x="46" y="510" font-size="7" font-style="italic" text-anchor="start">dashed boxes = connect after the hackathon, on purpose</text>
+</g>
+
+<g font-size="6.5" font-weight="700" text-anchor="middle">
+<g fill="#fff" stroke="#2a8048"><circle cx="59" cy="89" r="6.5"/><circle cx="59" cy="133" r="6.5"/><circle cx="59" cy="177" r="6.5"/><circle cx="59" cy="221" r="6.5"/><circle cx="59" cy="265" r="6.5"/><circle cx="259" cy="89" r="6.5"/></g>
+<g fill="#2a8048"><text x="59" y="91.5">1</text><text x="59" y="135.5">2</text><text x="59" y="179.5">3</text><text x="59" y="223.5">4</text><text x="59" y="267.5">5</text><text x="259" y="91.5">6</text></g>
+<g fill="#fff" stroke="#3873b0"><circle cx="525" cy="79" r="6.5"/><circle cx="525" cy="125" r="6.5"/></g><g fill="#3873b0"><text x="525" y="81.5">7</text><text x="525" y="127.5">8</text></g>
+<g fill="#fff" stroke="#2a8074"><circle cx="525" cy="233" r="6.5"/><circle cx="525" cy="271" r="6.5"/><circle cx="525" cy="309" r="6.5"/></g><g fill="#2a8074"><text x="525" y="235.5">9</text><text x="525" y="273.5">10</text><text x="525" y="311.5">11</text></g>
+<g fill="#fff" stroke="#7048b0"><circle cx="825" cy="85" r="6.5"/><circle cx="947" cy="85" r="6.5"/><circle cx="1069" cy="85" r="6.5"/><circle cx="825" cy="127" r="6.5"/><circle cx="947" cy="127" r="6.5"/><circle cx="1069" cy="127" r="6.5"/><circle cx="825" cy="169" r="6.5"/><circle cx="947" cy="169" r="6.5"/><circle cx="1069" cy="169" r="6.5"/><circle cx="825" cy="211" r="6.5"/><circle cx="947" cy="211" r="6.5"/><circle cx="1069" cy="211" r="6.5"/></g>
+<g fill="#7048b0"><text x="825" y="87.5">12</text><text x="947" y="87.5">13</text><text x="1069" y="87.5">14</text><text x="825" y="129.5">15</text><text x="947" y="129.5">16</text><text x="1069" y="129.5">17</text><text x="825" y="171.5">18</text><text x="947" y="171.5">19</text><text x="1069" y="171.5">20</text><text x="825" y="213.5">21</text><text x="947" y="213.5">22</text><text x="1069" y="213.5">23</text></g>
+<g fill="#fff" stroke="#b04828"><circle cx="525" cy="399" r="6.5"/><circle cx="733" cy="399" r="6.5"/><circle cx="525" cy="451" r="6.5"/><circle cx="733" cy="451" r="6.5"/><circle cx="525" cy="503" r="6.5"/></g>
+<g fill="#b04828"><text x="525" y="401.5">24</text><text x="733" y="401.5">25</text><text x="525" y="453.5">26</text><text x="733" y="453.5">27</text><text x="525" y="505.5">28</text></g>
+<g fill="#fff" stroke="#9c6b1e"><circle cx="1245" cy="81" r="6.5"/><circle cx="1245" cy="125" r="6.5"/><circle cx="1245" cy="169" r="6.5"/><circle cx="1245" cy="213" r="6.5"/><circle cx="1245" cy="257" r="6.5"/><circle cx="1245" cy="301" r="6.5"/></g>
+<g fill="#9c6b1e"><text x="1245" y="83.5">29</text><text x="1245" y="129.5">30</text><text x="1245" y="173.5">31</text><text x="1245" y="217.5">32</text><text x="1245" y="261.5">33</text><text x="1245" y="305.5">34</text></g>
+<g fill="#fff" stroke="#2a8048"><circle cx="1245" cy="399" r="6.5"/><circle cx="1245" cy="451" r="6.5"/><circle cx="1245" cy="503" r="6.5"/><circle cx="1245" cy="555" r="6.5"/></g>
+<g fill="#2a8048"><text x="1245" y="401.5">35</text><text x="1245" y="453.5">36</text><text x="1245" y="505.5">37</text><text x="1245" y="557.5">38</text></g>
+<g fill="#fff" stroke="#b03868"><circle cx="55" cy="401" r="6.5"/><circle cx="263" cy="401" r="6.5"/><circle cx="55" cy="453" r="6.5"/><circle cx="263" cy="453" r="6.5"/></g>
+<g fill="#b03868"><text x="55" y="403.5">39</text><text x="263" y="403.5">40</text><text x="55" y="455.5">41</text><text x="263" y="455.5">42</text></g>
+<g fill="#fff" stroke="#3873b0"><circle cx="219" cy="709" r="6.5"/><circle cx="399" cy="709" r="6.5"/><circle cx="568" cy="702" r="6.5"/><circle cx="569" cy="789" r="6.5"/><circle cx="709" cy="709" r="6.5"/><circle cx="889" cy="709" r="6.5"/><circle cx="1058" cy="702" r="6.5"/><circle cx="1049" cy="789" r="6.5"/><circle cx="1209" cy="709" r="6.5"/><circle cx="1389" cy="709" r="6.5"/></g>
+<g fill="#3873b0"><text x="219" y="711.5">43</text><text x="399" y="711.5">44</text><text x="568" y="704.5">45</text><text x="569" y="791.5">46</text><text x="709" y="711.5">47</text><text x="889" y="711.5">48</text><text x="1058" y="704.5">49</text><text x="1049" y="791.5">50</text><text x="1209" y="711.5">51</text><text x="1389" y="711.5">52</text></g>
+<g fill="#fff" stroke="#7048b0"><circle cx="69" cy="974" r="6.5"/><circle cx="269" cy="974" r="6.5"/><circle cx="462" cy="966" r="6.5"/><circle cx="589" cy="974" r="6.5"/><circle cx="819" cy="974" r="6.5"/></g>
+<g fill="#7048b0"><text x="69" y="976.5">53</text><text x="269" y="976.5">54</text><text x="462" y="968.5">55</text><text x="589" y="976.5">56</text><text x="819" y="976.5">57</text></g>
+</g>
+
+<rect x="30" y="1070" width="1540" height="76" rx="10" fill="#fafafa" stroke="#c4c4c4"/>
+<g font-size="8.5" fill="#333">
+<text x="50" y="1092" font-weight="700">HOW TO READ THIS PICTURE (for anyone, tech or not):</text>
+<text x="50" y="1110">Numbers 1-57 = follow them in order, like a comic. Rectangle = someone or something DOES an action. Diamond = the system asks a yes/no question.</text>
+<text x="50" y="1126">Oval = start or finish. Blue tint = works WITHOUT internet. Grey = outside world or "later". Pink dashed = friends we connect after the hackathon.</text>
+<text x="50" y="1142">Thin solid line = information moving. Dashed line = happens automatically by itself. Tiny grey text under a box = the technical name (for engineers and judges).</text>
+</g>
+<g stroke="#222" fill="#fff" stroke-width="1.2">
+<rect x="1250" y="1084" width="26" height="14" rx="4"/><path d="M1300,1084 L1313,1091 L1300,1098 L1287,1091 Z" fill="#f9e0ec" stroke="#d48cab"/><ellipse cx="1340" cy="1091" rx="14" ry="8" fill="#eaf3fb" stroke="#8fb8dc"/><line x1="1370" y1="1091" x2="1400" y2="1091" stroke-dasharray="4,3" fill="none"/>
+</g>
+<g font-size="7.5" fill="#555">
+<text x="1263" y="1112">action</text><text x="1300" y="1124">question</text><text x="1340" y="1112">start/end</text><text x="1385" y="1112">automatic</text>
+</g>
+<text x="1580" y="1156" text-anchor="end" font-size="7.5" fill="#999">PolarOps SIH26062 - plain-language architecture + process flow - every numbered box is a real file or screen in the repository</text>
+</svg>
