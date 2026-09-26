@@ -101,16 +101,17 @@ CREATE TABLE emergency_events (
   payload JSONB
 );
 
-
--- changes requred
 CREATE TABLE audit_log (
-  id BIGSERIAL PRIMARY KEY,
-  ts TIMESTAMPTZ NOT NULL DEFAULT now(),
-  user_id UUID,
-  action TEXT NOT NULL,
-  entity TEXT NOT NULL,
-  entity_id UUID,
-  details JSONB,
-  prev_hash TEXT,
-  row_hash TEXT
+    id BIGSERIAL PRIMARY KEY,
+    ts TIMESTAMPTZ NOT NULL DEFAULT now(),
+    user TEXT REFERENCES users(username),
+    action TEXT NOT NULL,
+    entity TEXT NOT NULL,
+    entity_id TEXT, 
+    details JSONB,
+    location GEOGRAPHY(Point, 4326),
+    ip_address INET, 
+    user_agent TEXT,
+    prev_hash TEXT, 
+    row_hash TEXT
 );
