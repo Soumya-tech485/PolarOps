@@ -1,6 +1,3 @@
-db/seed/seed_cargo.py
-
-"""Stock both stations: continuous supplies + intermittent spare parts."""
 import asyncio
 import os
 import uuid

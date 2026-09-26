@@ -1,6 +1,3 @@
-db/seed/seed_personnel.py
-
-"""Eight people across both stations, covering all three statuses."""
 import asyncio
 import os
 import uuid

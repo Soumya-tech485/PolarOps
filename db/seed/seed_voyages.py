@@ -1,6 +1,3 @@
-db/seed/seed_voyages.py
-
-"""Insert the two Nov-Mar season voyages (Cape Town loop, real pattern)."""
 import asyncio
 import os
 import uuid

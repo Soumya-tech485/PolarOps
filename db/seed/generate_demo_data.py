@@ -1,8 +1,3 @@
-db/seed/generate_demo_data.py
-
-"""One command that fills the whole demo database, reproducibly.
-Run from the REPO ROOT:  python db/seed/generate_demo_data.py
-"""
 import asyncio
 import os
 import random
