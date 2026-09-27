@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ice: #f4f9fd;
+  --color-surface: #ffffff;
+  --color-ink: #12263a;
+  --color-muted: #5b7186;
+  --color-brand: #1f6fb0;
+  --color-critical: #c0392b;
+  --color-warning: #b9770e;
+  --color-stable: #1e8449;
+  --color-sync: #148f9c;
+  --color-stale: #8a8a8a;
+  --radius-card: 10px;
+  --radius-control: 8px;
+  --text-body: 14px;
+  --text-label: 12px;
+  --text-title: 20px;
+  --text-metric: 28px;
+}
+
+@layer base {
+  body { @apply bg-ice text-ink text-body antialiased; }
+  button, input, select, a.btn { min-height: 48px; }
+}
