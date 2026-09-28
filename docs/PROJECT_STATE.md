@@ -96,3 +96,30 @@ before delivery. PPT: 16:9, dense diagram = PDF/handout asset, hall slide = simp
 Simple English; tables + copy-paste terminal blocks; PowerShell-safe commands (flag bash-only syntax);
 complete paste-ready files, placeholders marked; end replies with 2–3 "say X" continuation options;
 never re-guess roster or resurrect rejected ideas (e.g., ML in v1, delay-simulator-as-feature).
+
+# PolarOps — Project State (FINAL, pre-finale)
+
+Status: CODE-COMPLETE · 46/46 tests green · deployed topology: Vercel (FE) → Render (BE) → Neon (DB)
+
+## Counts
+- DB: 12 tables, 6 indexes, 1 append-only trigger, 4 seed scripts
+- Backend: 13 routers (43 endpoints), 5 services, 7 schema modules, hash-chained audit middleware
+- AI/ML: Croston/SBA + 30-day MA classifier, CP-SAT packing (<2 s @100 items), 48 h SOS escalation machine
+- Frontend: 36-file offline-first PWA (Dexie outbox + snapshots, Workbox, Leaflet, QR on-device)
+- Tests: 43 core + 3 red-team proofs = 46
+
+## Locked decisions (do not revisit)
+1. schema.sql frozen; changes only via Alembic migration + same-commit model/seed updates
+2. UUID primary keys everywhere (offline-born client ids)
+3. audit_log append-only at DB level; passwords/QR/tokens redacted in details
+4. Optimizer refuses cargo linked to maintenance-due assets (absolute rule)
+5. Sync = idempotent client_uuid receipts + last-write-wins with SYNC_CONFLICT audit rows
+6. main = deploy branch; rebuild/feature = work branches; no force-push on shared branches
+
+## Known limitations
+See docs/known-limitations.md (Bharati-TIMES unify-not-replace, DROMLAN/COSPAS post-hackathon connectors, OSM tiles online-first with cache).
+
+## Next actions
+1. Fill .github/workflows/keepalive.yml URL after Render deploy
+2. Export Figma screens/icons into design/ ; convert icon.svg → PNGs
+3. Rehearse docs/demo-script.md (8 min) + Q&A traps
