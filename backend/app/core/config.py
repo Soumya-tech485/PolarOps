@@ -19,9 +19,9 @@ class Settings:
     SYNC_MODE: str = os.environ.get("SYNC_MODE", "outbox")
     ENV: str = os.environ.get("ENV", "dev")
     CORS_ORIGINS: tuple = tuple(
-        os.environ.get(
+        x.strip() for x in os.environ.get(
             "CORS_ORIGINS", "http://localhost:5173,https://polar-ops-nine.vercel.app"
-        ).split(",")
+        ).split(",") if x.strip()
     )
 
 

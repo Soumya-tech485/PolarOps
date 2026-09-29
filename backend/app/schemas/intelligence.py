@@ -1,11 +1,11 @@
-"""DTOs for forecast, what-if and packing manifest responses."""
-import uuid
+﻿"""Forecast / what-if / packing DTOs."""
+from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class ForecastLine(BaseModel):
-    item_id: uuid.UUID
+    item_id: UUID
     name: str
     category: str | None
     quantity: float
@@ -17,50 +17,40 @@ class ForecastLine(BaseModel):
 
 
 class StationForecast(BaseModel):
-    station_id: uuid.UUID
-    eta_days: int | None
+    station_id: UUID
+    eta_days: int
     lines: list[ForecastLine]
-
-
-class AirDropLine(BaseModel):
-    item_id: uuid.UUID
-    name: str
-    shortfall: float
 
 
 class WhatIfReport(BaseModel):
     delay_days: int
     new_eta_days: int
     lines: list[ForecastLine]
-    airdrop: list[AirDropLine]
+    airdrop: list[dict]
 
 
 class PackingRequest(BaseModel):
-    voyage_id: uuid.UUID
+    voyage_id: UUID
     apply: bool = False
 
 
-class ManifestItem(BaseModel):
-    indent_id: uuid.UUID
+class PackingManifest(BaseModel):
+    indent_id: UUID
     item_name: str
+    box_label: str | None
     qty: float
-    weight_kg: float
     stow_position: str | None
 
 
-class RejectedItem(BaseModel):
-    indent_id: uuid.UUID
-    item_name: str
-    reason: str
-
-
-class PackingManifest(BaseModel):
-    voyage_id: uuid.UUID
-    selected: list[ManifestItem]
-    rejected: list[RejectedItem]
+class PackingResponse(BaseModel):
+    voyage_id: UUID
+    selected: list[dict]
+    rejected: list[dict]
     used_kg: float
     used_m3: float
-    capacity_kg: float | None
-    capacity_m3: float | None
+    capacity_kg: float
+    capacity_m3: float
     solver_status: str
-    solve_seconds: float = Field(ge=0)
+    solve_seconds: float
+    applied: bool = False
+

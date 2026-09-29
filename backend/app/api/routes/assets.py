@@ -1,5 +1,5 @@
-"""Assets + the maintenance flag that powers the optimizer exclusion rule."""
-import uuid
+﻿"""Asset registry + maintenance flags."""
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
@@ -7,48 +7,55 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.core.rbac import require_role
-from app.models import Asset, Station, User
+from app.models import Asset, User
 from app.schemas.ops import AssetCreate, AssetRead, MaintenanceUpdate
 
 router = APIRouter()
-ANY_ROLE = require_role("station", "logistics", "admin")
-LOGISTICS = require_role("logistics", "admin")
+ANY = ("station", "logistics", "admin")
+LOGI = ("logistics", "admin")
 
 
 @router.get("", response_model=list[AssetRead])
-async def list_assets(station_id: uuid.UUID | None = Query(None), db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    stmt = select(Asset).order_by(Asset.name)
+async def list_assets(station_id: UUID | None = Query(None),
+                      db: AsyncSession = Depends(get_db),
+                      user: User = Depends(require_role(*ANY))):
+    stmt = select(Asset).order_by(Asset.serial)
     if station_id:
         stmt = stmt.where(Asset.station_id == station_id)
-    return (await db.execute(stmt)).scalars().all()
+    return [AssetRead.model_validate(a) for a in (await db.execute(stmt)).scalars().all()]
 
 
 @router.post("", response_model=AssetRead, status_code=status.HTTP_201_CREATED)
-async def add_asset(body: AssetCreate, db: AsyncSession = Depends(get_db), user: User = Depends(LOGISTICS)):
-    if body.station_id and await db.get(Station, body.station_id) is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Station not found")
+async def add_asset(body: AssetCreate,
+                    db: AsyncSession = Depends(get_db),
+                    user: User = Depends(require_role(*LOGI))):
     asset = Asset(**body.model_dump())
     db.add(asset)
     await db.commit()
     await db.refresh(asset)
-    return asset
+    return AssetRead.model_validate(asset)
 
 
 @router.get("/{asset_id}", response_model=AssetRead)
-async def get_asset(asset_id: uuid.UUID, db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    asset = await db.get(Asset, asset_id)
+async def get_asset(asset_id: UUID,
+                    db: AsyncSession = Depends(get_db),
+                    user: User = Depends(require_role(*ANY))):
+    asset = (await db.execute(select(Asset).where(Asset.id == asset_id))).scalar_one_or_none()
     if asset is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Asset not found")
-    return asset
+        raise HTTPException(status_code=404, detail="asset not found")
+    return AssetRead.model_validate(asset)
 
 
 @router.post("/{asset_id}/maintenance", response_model=AssetRead)
-async def set_maintenance(asset_id: uuid.UUID, body: MaintenanceUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(LOGISTICS)):
-    """Flip the flag the CP-SAT optimizer refuses to ship around (locked rule)."""
-    asset = await db.get(Asset, asset_id)
+async def set_maintenance(asset_id: UUID, body: MaintenanceUpdate,
+                          db: AsyncSession = Depends(get_db),
+                          user: User = Depends(require_role(*LOGI))):
+    asset = (await db.execute(select(Asset).where(Asset.id == asset_id))).scalar_one_or_none()
     if asset is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Asset not found")
+        raise HTTPException(status_code=404, detail="asset not found")
     asset.maintenance_due = body.maintenance_due
     asset.next_maintenance = body.next_maintenance
     await db.commit()
-    return asset
+    await db.refresh(asset)
+    return AssetRead.model_validate(asset)
+

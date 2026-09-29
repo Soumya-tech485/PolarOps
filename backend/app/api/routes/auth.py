@@ -1,38 +1,44 @@
-"""Authentication endpoints."""
+﻿"""Login / me / admin-ping."""
+from datetime import datetime, timedelta, timezone
+
+import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
+from passlib.hash import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core import security
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.rbac import require_role
 from app.models import User
 from app.schemas.auth import LoginRequest, TokenResponse, UserRead
 
 router = APIRouter()
+ANY = ("station", "logistics", "admin")
+
+
+def _token(user: User) -> str:
+    payload = {
+        "sub": str(user.id),
+        "role": user.role,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+    }
+    return jwt.encode(payload, settings.JWT_SECRET, algorithm="HS256")
 
 
 @router.post("/login", response_model=TokenResponse)
 async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
-    """Verify credentials and issue a JWT.
-    The error message never says WHICH field was wrong (anti-enumeration)."""
-    result = await db.execute(select(User).where(User.email == body.email))
-    user = result.scalar_one_or_none()
-    if user is None or not security.verify_password(body.password, user.password_hash):
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid email or password")
-    return TokenResponse(
-        access_token=security.create_access_token(str(user.id), user.role),
-        role=user.role,
-    )
+    user = (await db.execute(select(User).where(User.email == body.email))).scalar_one_or_none()
+    if user is None or not bcrypt.verify(body.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="invalid credentials")
+    return TokenResponse(access_token=_token(user), role=user.role)
 
 
 @router.get("/me", response_model=UserRead)
-async def me(user: User = Depends(require_role("station", "logistics", "admin"))):
-    """Any authenticated role can read its own profile."""
-    return user
+async def me(db: AsyncSession = Depends(get_db), user: User = Depends(require_role(*ANY))):
+    return UserRead.model_validate(user)
 
 
 @router.get("/admin-ping")
 async def admin_ping(user: User = Depends(require_role("admin"))):
-    """RBAC self-test: 200 for admin, 403 for station/logistics, 401 anonymous."""
-    return {"ping": "pong", "as": user.email}
+    return {"ping": "pong"}

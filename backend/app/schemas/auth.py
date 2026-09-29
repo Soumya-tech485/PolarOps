@@ -1,12 +1,12 @@
-"""Pydantic DTOs for /auth/* — the exact JSON contract with the frontend."""
-import uuid
+﻿"""Auth DTOs."""
+from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class LoginRequest(BaseModel):
-    email: str = Field(min_length=3)
-    password: str = Field(min_length=6)
+    email: str
+    password: str
 
 
 class TokenResponse(BaseModel):
@@ -16,8 +16,7 @@ class TokenResponse(BaseModel):
 
 
 class UserRead(BaseModel):
-    id: uuid.UUID
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
     email: str
     role: str
-
-    model_config = {"from_attributes": True}

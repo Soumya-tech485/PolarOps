@@ -16,19 +16,24 @@ DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "")
 
 async def _run():
     conn = await asyncpg.connect(DSN)
-    row_id = await conn.fetchval(
-        "INSERT INTO audit_log (action, entity) VALUES ('TEST-tamper-probe', 'test') RETURNING id"
-    )
-    blocked = 0
-    for stmt in (
-        "UPDATE audit_log SET action = 'TAMPERED' WHERE id = $1",
-        "DELETE FROM audit_log WHERE id = $1",
-    ):
-        try:
-            await conn.execute(stmt, row_id)
-        except Exception:
-            blocked += 1
-    await conn.close()
+    tr = conn.transaction()
+    await tr.start()
+    try:
+        row_id = await conn.fetchval(
+            "INSERT INTO audit_log (action, entity) VALUES ('TEST-tamper-probe', 'test') RETURNING id"
+        )
+        blocked = 0
+        for stmt in (
+            "UPDATE audit_log SET action = 'TAMPERED' WHERE id = $1",
+            "DELETE FROM audit_log WHERE id = $1",
+        ):
+            try:
+                await conn.execute(stmt, row_id)
+            except Exception:
+                blocked += 1
+    finally:
+        await tr.rollback()
+        await conn.close()
     assert blocked == 2, "audit_log trigger failed to block UPDATE/DELETE!"
 
 

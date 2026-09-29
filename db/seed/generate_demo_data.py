@@ -1,4 +1,4 @@
-﻿"""One command that fills the whole demo database, reproducibly.
+"""One command that fills the whole demo database, reproducibly.
 Run from the REPO ROOT:  python db/seed/generate_demo_data.py
 """
 import asyncio
@@ -68,7 +68,7 @@ async def main() -> None:
 
     await conn.execute("""TRUNCATE users, stations, personnel, voyages, cargo_items,
                           indents, consumption_events, assets, emergency_events,
-                          sync_receipts, voyage_assignments RESTART IDENTITY CASCADE""")
+                          sync_receipts, voyage_assignments, audit_log RESTART IDENTITY CASCADE""")
 
     pw = bcrypt.hash("polar123")
     for uid, email, role in ((ADMIN, "admin@ncpor.gov.in", "admin"),

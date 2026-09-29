@@ -1,4 +1,4 @@
-"""FastAPI entry point — the single door every request walks through."""
+﻿"""FastAPI entry point - the single door every request walks through."""
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -18,12 +18,17 @@ scheduler = AsyncIOScheduler()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    scheduler_started = False
     if settings.ENV != "test":
         scheduler.add_job(forecasting.nightly_critical_scan, "cron", hour=2, minute=0)
         scheduler.add_job(emergency_service.scheduled_escalation_check, "interval", hours=1)
-        scheduler.start()
+        try:
+            scheduler.start()
+            scheduler_started = True
+        except Exception:
+            scheduler_started = False
     yield
-    if scheduler.running:
+    if scheduler_started and scheduler.running:
         scheduler.shutdown(wait=False)
 
 
@@ -41,7 +46,6 @@ app.add_middleware(AuditMiddleware)
 
 @app.get("/health")
 def health():
-    """Liveness probe for keep-alive cron and Docker healthcheck."""
     return {"status": "ok"}
 
 

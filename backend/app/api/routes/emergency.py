@@ -1,31 +1,30 @@
-"""Emergency response endpoints (PS#5)."""
-import uuid
+﻿"""Emergency SOS lifecycle + 48h escalation check."""
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.core.rbac import require_role
-from app.models import EmergencyEvent, Station, User
-from app.schemas.emergency import EmergencyRead, EscalationReport, SOSRequest, TransitionRequest
-from app.services import emergency
+from app.models import EmergencyEvent, User
+from app.schemas.emergency import EmergencyRead, EmergencyTransition, SOSCreate
+from app.services.emergency import TRANSITIONS, check_escalations
 
 router = APIRouter()
-ANY_ROLE = require_role("station", "logistics", "admin")
+ANY = ("station", "logistics", "admin")
 
 
 def _read(e: EmergencyEvent) -> EmergencyRead:
-    out = EmergencyRead.model_validate(e)
-    out.raised_at = e.raised_at.isoformat() if e.raised_at else None
-    return out
+    return EmergencyRead.model_validate(e)
 
 
-@router.post("/sos", response_model=EmergencyRead, status_code=status.HTTP_201_CREATED)
-async def raise_sos(body: SOSRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_role("station", "logistics"))):
-    if await db.get(Station, body.station_id) is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Station not found")
-    event = EmergencyEvent(station_id=body.station_id, raised_by=user.id, payload=body.payload)
+@router.post("/sos", response_model=EmergencyRead)
+async def raise_sos(body: SOSCreate,
+                    db: AsyncSession = Depends(get_db),
+                    user: User = Depends(require_role(*ANY))):
+    event = EmergencyEvent(station_id=body.station_id, raised_by=user.id,
+                           state="SOS_RAISED", payload=body.payload)
     db.add(event)
     await db.commit()
     await db.refresh(event)
@@ -33,26 +32,44 @@ async def raise_sos(body: SOSRequest, db: AsyncSession = Depends(get_db), user: 
 
 
 @router.get("", response_model=list[EmergencyRead])
-async def list_emergencies(db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    return [_read(e) for e in (await db.execute(
-        select(EmergencyEvent).order_by(EmergencyEvent.raised_at.desc()))).scalars().all()]
+async def list_events(db: AsyncSession = Depends(get_db),
+                      user: User = Depends(require_role(*ANY))):
+    result = await db.execute(select(EmergencyEvent).order_by(EmergencyEvent.raised_at.desc()))
+    return [_read(e) for e in result.scalars().all()]
 
 
-@router.post("/run-escalation-check", response_model=EscalationReport)
-async def run_check(db: AsyncSession = Depends(get_db), user: User = Depends(require_role("admin"))):
-    """Demo/test button for the 48-hour rule (production: APScheduler hourly)."""
-    ids = await emergency.check_escalations(db)
-    return EscalationReport(escalated=ids, count=len(ids))
+@router.post("/run-escalation-check")
+async def run_escalation_check(db: AsyncSession = Depends(get_db),
+                               user: User = Depends(require_role("admin"))):
+    escalated = await check_escalations(db)
+    return {"count": len(escalated), "escalated": [str(e) for e in escalated]}
 
 
 @router.get("/{event_id}", response_model=EmergencyRead)
-async def get_emergency(event_id: uuid.UUID, db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    event = await db.get(EmergencyEvent, event_id)
+async def get_event(event_id: UUID,
+                    db: AsyncSession = Depends(get_db),
+                    user: User = Depends(require_role(*ANY))):
+    event = (await db.execute(select(EmergencyEvent).where(EmergencyEvent.id == event_id))).scalar_one_or_none()
     if event is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Emergency not found")
+        raise HTTPException(status_code=404, detail="emergency event not found")
     return _read(event)
 
 
 @router.post("/{event_id}/transition", response_model=EmergencyRead)
-async def move_state(event_id: uuid.UUID, body: TransitionRequest, db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    return _read(await emergency.transition(db, event_id, body.to_state, user.role))
+async def transition_event(event_id: UUID, body: EmergencyTransition,
+                           db: AsyncSession = Depends(get_db),
+                           user: User = Depends(require_role(*ANY))):
+    event = (await db.execute(select(EmergencyEvent).where(EmergencyEvent.id == event_id))).scalar_one_or_none()
+    if event is None:
+        raise HTTPException(status_code=404, detail="emergency event not found")
+    allowed = TRANSITIONS.get(event.state, {})
+    if body.to_state not in allowed:
+        raise HTTPException(status_code=409,
+                        detail=f"illegal transition from '{event.state}' to '{body.to_state}'")
+    if user.role not in allowed[body.to_state]:
+        raise HTTPException(status_code=403,
+                        detail=f"role '{user.role}' cannot transition to '{body.to_state}'")
+    event.state = body.to_state
+    await db.commit()
+    await db.refresh(event)
+    return _read(event)

@@ -1,15 +1,13 @@
-"""SOS escalation state machine mirroring the 48-hour no-contact pattern."""
-import uuid
+"""Emergency state machine + 48-hour auto-escalation."""
 from datetime import datetime, timedelta, timezone
 
-from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.database import AsyncSessionLocal
 from app.models import EmergencyEvent
 
-ESCALATION_HOURS = 48
-
+# state -> {target_state: roles allowed to perform it}
 TRANSITIONS: dict[str, dict[str, set[str]]] = {
     "SOS_RAISED": {
         "STATION_RESPONSE": {"station", "logistics", "admin"},
@@ -21,47 +19,36 @@ TRANSITIONS: dict[str, dict[str, set[str]]] = {
         "RESOLVED": {"logistics", "admin"},
         "STOOD_DOWN": {"logistics", "admin"},
     },
-    "ESCALATED_SAR": {"RESOLVED": {"admin"}},
+    "ESCALATED_SAR": {
+        "RESOLVED": {"admin"},
+    },
     "RESOLVED": {},
     "STOOD_DOWN": {},
 }
 
-
-async def transition(db: AsyncSession, event_id, to_state: str, role: str) -> EmergencyEvent:
-    event = await db.get(EmergencyEvent, event_id)
-    if event is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Emergency not found")
-    allowed = TRANSITIONS.get(event.state, {}).get(to_state)
-    if allowed is None:
-        raise HTTPException(status.HTTP_409_CONFLICT, f"Illegal move {event.state} -> {to_state}")
-    if role not in allowed:
-        raise HTTPException(status.HTTP_403_FORBIDDEN, f"Role '{role}' cannot perform {to_state}")
-    event.state = to_state
-    await db.commit()
-    return event
+ESCALATION_WINDOW = timedelta(hours=48)
+ESCALATABLE_STATES = ("SOS_RAISED", "STATION_RESPONSE")
 
 
 async def check_escalations(db: AsyncSession) -> list:
-    """The 48-hour rule as code: silent incidents escalate themselves."""
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=ESCALATION_HOURS)
-    rows = (
-        await db.execute(
-            select(EmergencyEvent).where(
-                EmergencyEvent.state.in_(("SOS_RAISED", "STATION_RESPONSE")),
-                EmergencyEvent.raised_at < cutoff,
-            )
+    """Silent incidents older than 48 h escalate themselves."""
+    cutoff = datetime.now(timezone.utc) - ESCALATION_WINDOW
+    result = await db.execute(
+        select(EmergencyEvent).where(
+            EmergencyEvent.state.in_(ESCALATABLE_STATES),
+            EmergencyEvent.raised_at < cutoff,
         )
-    ).scalars().all()
-    for event in rows:
+    )
+    escalated = []
+    for event in result.scalars().all():
         event.state = "ESCALATED_SAR"
-    if rows:
+        escalated.append(event.id)
+    if escalated:
         await db.commit()
-    return [e.id for e in rows]
+    return escalated
 
 
 async def scheduled_escalation_check() -> None:
-    """APScheduler hourly entry point (own session)."""
-    from app.core.database import AsyncSessionLocal
-
+    """Hourly APScheduler entry point."""
     async with AsyncSessionLocal() as db:
         await check_escalations(db)

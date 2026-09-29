@@ -1,27 +1,24 @@
-"""DTOs for the SOS workflow."""
-import uuid
+"""Emergency DTOs."""
+from datetime import datetime
+from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
-class SOSRequest(BaseModel):
-    station_id: uuid.UUID
+class SOSCreate(BaseModel):
+    station_id: UUID
     payload: dict | None = None
 
 
-class TransitionRequest(BaseModel):
+class EmergencyTransition(BaseModel):
     to_state: str
 
 
 class EmergencyRead(BaseModel):
-    id: uuid.UUID
-    station_id: uuid.UUID
-    raised_by: uuid.UUID | None
-    raised_at: str | None = None
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    station_id: UUID
+    raised_by: UUID | None
+    raised_at: datetime
     state: str
     payload: dict | None
-
-
-class EscalationReport(BaseModel):
-    escalated: list[uuid.UUID]
-    count: int

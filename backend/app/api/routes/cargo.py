@@ -1,5 +1,5 @@
-"""Cargo item CRUD + voyage loading manifest (PS#2)."""
-import uuid
+﻿"""Cargo items + voyage manifest. NOTE: /manifest declared BEFORE /{item_id}."""
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
@@ -11,61 +11,53 @@ from app.models import CargoItem, Indent, User
 from app.schemas.cargo import CargoCreate, CargoRead, ManifestLine
 
 router = APIRouter()
-ANY_ROLE = require_role("station", "logistics", "admin")
+ANY = ("station", "logistics", "admin")
+LOGI = ("logistics", "admin")
 
 
 @router.get("", response_model=list[CargoRead])
-async def list_cargo(
-    station_id: uuid.UUID | None = Query(None),
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(ANY_ROLE),
-):
-    stmt = select(CargoItem)
+async def list_cargo(station_id: UUID | None = Query(None),
+                     db: AsyncSession = Depends(get_db),
+                     user: User = Depends(require_role(*ANY))):
+    stmt = select(CargoItem).order_by(CargoItem.name)
     if station_id:
         stmt = stmt.where(CargoItem.station_id == station_id)
-    stmt = stmt.order_by(CargoItem.priority, CargoItem.name)
-    return (await db.execute(stmt)).scalars().all()
+    return [CargoRead.model_validate(c) for c in (await db.execute(stmt)).scalars().all()]
 
 
 @router.post("", response_model=CargoRead, status_code=status.HTTP_201_CREATED)
-async def create_cargo(
-    body: CargoCreate,
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(require_role("logistics", "admin")),
-):
+async def create_cargo(body: CargoCreate,
+                       db: AsyncSession = Depends(get_db),
+                       user: User = Depends(require_role(*LOGI))):
     item = CargoItem(**body.model_dump())
     db.add(item)
     await db.commit()
     await db.refresh(item)
-    return item
+    return CargoRead.model_validate(item)
 
 
-# "/manifest" MUST be declared before "/{item_id}" (route-ordering rule).
 @router.get("/manifest", response_model=list[ManifestLine])
-async def voyage_manifest(
-    voyage_id: uuid.UUID = Query(...),
-    db: AsyncSession = Depends(get_db),
-    user: User = Depends(ANY_ROLE),
-):
-    stmt = (
+async def manifest(voyage_id: UUID = Query(...),
+                   db: AsyncSession = Depends(get_db),
+                   user: User = Depends(require_role(*ANY))):
+    result = await db.execute(
         select(Indent, CargoItem)
         .join(CargoItem, Indent.cargo_item_id == CargoItem.id)
         .where(Indent.voyage_id == voyage_id,
-               Indent.status.in_(("cleared", "shipped", "received")))
-        .order_by(Indent.stow_position.nulls_last(), CargoItem.priority)
+               Indent.status.in_(["cleared", "shipped", "received"]))
+        .order_by(CargoItem.box_label)
     )
-    rows = (await db.execute(stmt)).all()
-    return [
-        ManifestLine(indent_id=indent.id, item_name=item.name, box_label=item.box_label,
-                     qty=float(indent.requested_qty), stow_position=indent.stow_position,
-                     status=indent.status)
-        for indent, item in rows
-    ]
+    return [ManifestLine(indent_id=ind.id, item_name=item.name, box_label=item.box_label,
+                         qty=ind.requested_qty, stow_position=ind.stow_position,
+                         status=ind.status)
+            for ind, item in result.all()]
 
 
 @router.get("/{item_id}", response_model=CargoRead)
-async def get_cargo(item_id: uuid.UUID, db: AsyncSession = Depends(get_db), user: User = Depends(ANY_ROLE)):
-    item = await db.get(CargoItem, item_id)
+async def get_cargo(item_id: UUID,
+                    db: AsyncSession = Depends(get_db),
+                    user: User = Depends(require_role(*ANY))):
+    item = (await db.execute(select(CargoItem).where(CargoItem.id == item_id))).scalar_one_or_none()
     if item is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Cargo item not found")
-    return item
+        raise HTTPException(status_code=404, detail="cargo item not found")
+    return CargoRead.model_validate(item)
