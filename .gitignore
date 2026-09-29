@@ -2,11 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # Environments
 .env
 .env.*
 !.env.example
+.venv/
 venv/
 env/
 ENV/
@@ -16,6 +18,9 @@ node_modules/
 dist/
 dist-ssr/
 *.local
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
 
 # Editor & OS
 .vscode/

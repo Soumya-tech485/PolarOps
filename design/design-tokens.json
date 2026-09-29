@@ -1,0 +1,19 @@
+{
+  "colors": {
+    "ice": "#f4f9fd", "surface": "#ffffff", "ink": "#12263a", "muted": "#5b7186",
+    "brand": "#1f6fb0",
+    "critical": "#c0392b", "warning": "#b9770e", "stable": "#1e8449",
+    "sync": "#148f9c", "stale": "#8a8a8a"
+  },
+  "spacing": { "xs": "4px", "sm": "8px", "md": "16px", "lg": "24px", "xl": "32px" },
+  "radius": { "card": "10px", "control": "8px" },
+  "type": { "body": "14px", "label": "12px", "title": "20px", "metric": "28px" },
+  "targets": { "minTap": "48px" },
+  "states": {
+    "online": { "color": "stable", "label": "Live" },
+    "offline": { "color": "warning", "label": "Offline - actions queued" },
+    "syncing": { "color": "sync", "label": "Syncing..." },
+    "stale": { "color": "stale", "label": "Data may be stale" }
+  },
+  "notes": "Contrast >= 4.5:1 for all text pairs; tap targets >= 48px for gloved use; risk tiers map critical/warning/stable."
+}

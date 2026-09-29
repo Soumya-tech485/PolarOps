@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="640" viewBox="0 0 1560 640" font-family="Segoe UI, Arial, sans-serif">
+<defs><marker id="fk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7a7a7a"/></marker></defs>
+<rect width="1560" height="640" fill="#ffffff"/>
+<text x="780" y="24" text-anchor="middle" font-size="15" font-weight="700" fill="#1f3350">PolarOps ERD - 12 tables, PostgreSQL 17 + PostGIS - arrows = foreign keys</text>
+<g fill="none" stroke="#7a7a7a" stroke-width="1.2">
+<polyline points="205,240 585,190" marker-end="url(#fk)"/>
+<polyline points="420,315 370,315" marker-end="url(#fk)"/>
+<polyline points="750,300 800,120" marker-end="url(#fk)"/>
+<polyline points="800,280 755,160" marker-end="url(#fk)"/>
+<polyline points="965,240 965,190" marker-end="url(#fk)"/>
+<polyline points="1130,270 1180,160" marker-end="url(#fk)"/>
+<polyline points="370,480 830,390" marker-end="url(#fk)"/>
+<polyline points="205,440 205,420 965,420 965,390" marker-end="url(#fk)"/>
+<polyline points="40,500 20,500 20,120 40,120" marker-end="url(#fk)"/>
+<polyline points="585,440 585,420 860,420 860,390" marker-end="url(#fk)"/>
+<polyline points="420,520 390,520 390,120 370,120" marker-end="url(#fk)"/>
+<polyline points="1240,240 1240,210 700,210 700,190" marker-end="url(#fk)"/>
+<polyline points="1300,240 1300,20 200,20 200,40" marker-end="url(#fk)"/>
+</g>
+<g stroke="#9c6b1e" fill="#faf3e3" stroke-width="1.3">
+<rect x="40" y="40" width="330" height="150" rx="8"/><rect x="420" y="40" width="330" height="150" rx="8"/><rect x="800" y="40" width="330" height="150" rx="8"/><rect x="1180" y="40" width="330" height="150" rx="8"/>
+<rect x="40" y="240" width="330" height="150" rx="8"/><rect x="420" y="240" width="330" height="150" rx="8"/><rect x="800" y="240" width="330" height="150" rx="8"/><rect x="1180" y="240" width="330" height="150" rx="8"/>
+<rect x="40" y="440" width="330" height="150" rx="8"/><rect x="420" y="440" width="330" height="150" rx="8"/><rect x="800" y="440" width="330" height="150" rx="8"/><rect x="1180" y="440" width="330" height="150" rx="8"/>
+</g>
+<g font-size="11" font-weight="700" fill="#1f3350">
+<text x="52" y="60">users</text><text x="432" y="60">stations</text><text x="812" y="60">voyages</text><text x="1192" y="60">assets</text>
+<text x="52" y="260">personnel</text><text x="432" y="260">voyage_assignments</text><text x="812" y="260">cargo_items</text><text x="1192" y="260">emergency_events</text>
+<text x="52" y="460">indents</text><text x="432" y="460">consumption_events</text><text x="812" y="460">audit_log (append-only)</text><text x="1192" y="460">sync_receipts</text>
+</g>
+<g font-size="8.5" fill="#333">
+<text x="52" y="78">PK id uuid</text><text x="52" y="92">UQ email text</text><text x="52" y="106">password_hash text</text><text x="52" y="120">role text (station|logistics|admin)</text><text x="52" y="134">created_at timestamptz</text>
+<text x="432" y="78">PK id uuid</text><text x="432" y="92">UQ code text</text><text x="432" y="106">name text</text><text x="432" y="120">geom geometry(Point,4326)</text><text x="432" y="134">next_resupply_date date</text>
+<text x="812" y="78">PK id uuid</text><text x="812" y="92">route text[]</text><text x="812" y="106">depart/arrive date</text><text x="812" y="120">status text</text><text x="812" y="134">capacity_kg/m3 numeric, delay_days int</text>
+<text x="1192" y="78">PK id uuid</text><text x="1192" y="92">UQ serial text</text><text x="1192" y="106">name text</text><text x="1192" y="120">FK station_id -&gt; stations</text><text x="1192" y="134">maintenance_due bool, next_maintenance date</text>
+<text x="52" y="278">PK id uuid</text><text x="52" y="292">full_name text, role_title text</text><text x="52" y="306">FK station_id -&gt; stations</text><text x="52" y="320">status (active|in_transit|emergency)</text><text x="52" y="334">last_location text, last_update ts, clearance date</text>
+<text x="432" y="278">PK id uuid</text><text x="432" y="292">FK voyage_id -&gt; voyages</text><text x="432" y="306">FK personnel_id -&gt; personnel</text><text x="432" y="320">role_on_board text</text><text x="432" y="334">UQ (voyage_id, personnel_id)</text>
+<text x="812" y="278">PK id uuid</text><text x="812" y="292">name, category, box_label text</text><text x="812" y="306">weight_kg/volume_m3 numeric, priority int</text><text x="812" y="320">quantity numeric</text><text x="812" y="334">FK station_id, voyage_id, asset_id</text>
+<text x="1192" y="278">PK id uuid</text><text x="1192" y="292">FK station_id -&gt; stations</text><text x="1192" y="306">FK raised_by -&gt; users</text><text x="1192" y="320">raised_at timestamptz</text><text x="1192" y="334">state text, payload jsonb</text>
+<text x="52" y="478">PK id uuid</text><text x="52" y="492">FK cargo_item_id -&gt; cargo_items</text><text x="52" y="506">FK voyage_id -&gt; voyages, FK created_by -&gt; users</text><text x="52" y="520">requested_qty numeric &gt; 0</text><text x="52" y="534">status (requested|cleared|shipped|received|rejected)</text><text x="52" y="548">qr_token, stow_position text, created/updated ts</text>
+<text x="432" y="478">PK id uuid</text><text x="432" y="492">FK cargo_item_id -&gt; cargo_items</text><text x="432" y="506">quantity numeric &gt; 0</text><text x="432" y="520">FK consumed_by -&gt; users</text><text x="432" y="534">consumed_at timestamptz, notes text</text>
+<text x="812" y="478">PK id bigserial</text><text x="812" y="492">ts timestamptz, user_id uuid</text><text x="812" y="506">action, entity text, entity_id uuid</text><text x="812" y="520">details jsonb</text><text x="812" y="534">prev_hash, row_hash text (sha256 chain)</text><text x="812" y="548">TRIGGER blocks UPDATE/DELETE</text>
+<text x="1192" y="478">PK client_uuid uuid</text><text x="1192" y="492">applied_at timestamptz</text><text x="1192" y="506">(idempotency receipts for /sync/batch)</text>
+</g>
+<text x="1540" y="628" text-anchor="end" font-size="8" fill="#999">PolarOps SIH26062 - ERD v1.0 - indexes: personnel(station), cargo(station,voyage), indents(status), consumption(item,time), audit(ts)</text>
+</svg>

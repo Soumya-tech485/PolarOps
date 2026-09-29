@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: "Outfit", sans-serif;
+
+  /* Refined Polar Obsidian & Frosted Glass Palette */
+  --color-polar-950: #030712;
+  --color-polar-900: #070d18;
+  --color-polar-850: #0c1524;
+  --color-polar-800: #111e33;
+  --color-polar-750: #172740;
+  --color-polar-700: #1e3252;
+  --color-polar-600: #2a436a;
+
+  /* Neon Aurora & High-Vis Telemetry Accents */
+  --color-aurora-cyan: #00f0ff;
+  --color-aurora-blue: #38bdf8;
+  --color-aurora-teal: #14b8a6;
+  --color-brand-primary: #0284c7;
+  
+  --color-alert-rose: #f43f5e;
+  --color-alert-amber: #f59e0b;
+  --color-alert-emerald: #10b981;
+}
+
+@layer base {
+  body {
+    background-color: #030712;
+    color: #e2eaf4;
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse 90% 60% at 50% -15%, rgba(14, 165, 233, 0.09), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 95% 85%, rgba(20, 184, 166, 0.05), transparent 60%),
+      linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    background-position: center top, right bottom, 0 0, 0 0;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Polar Tactical HUD Utilities */
+.hud-panel {
+  background: linear-gradient(180deg, rgba(12, 21, 36, 0.75) 0%, rgba(7, 13, 24, 0.88) 100%);
+  border: 1px solid rgba(38, 67, 106, 0.45);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.hud-panel-subtle {
+  background: rgba(10, 18, 31, 0.6);
+  border: 1px solid rgba(30, 50, 82, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.hud-panel-glow {
+  background: linear-gradient(180deg, rgba(14, 24, 42, 0.85) 0%, rgba(7, 13, 24, 0.95) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 25px -4px rgba(2, 132, 199, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.hud-panel-critical {
+  background: linear-gradient(180deg, rgba(35, 12, 18, 0.85) 0%, rgba(15, 6, 9, 0.95) 100%);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  box-shadow: 0 0 30px -4px rgba(244, 63, 94, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Polar Tactical HUD Corner Accents */
+.tactical-box {
+  position: relative;
+}
+.tactical-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid #38bdf8;
+  border-left: 1.5px solid #38bdf8;
+  pointer-events: none;
+}
+.tactical-box::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  border-bottom: 1.5px solid #38bdf8;
+  border-right: 1.5px solid #38bdf8;
+  pointer-events: none;
+}
+
+/* Subtle radar sweep animation */
+@keyframes radar-sweep {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.35; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-sweep-effect {
+  position: relative;
+  overflow: hidden;
+}
+.radar-sweep-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.07), transparent);
+  animation: radar-sweep 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+::-webkit-scrollbar-thumb {
+  background: #172740;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
