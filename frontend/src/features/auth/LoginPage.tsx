@@ -70,11 +70,17 @@ export function LoginPage() {
       login(res.access_token, res.role, values.email);
       navigate("/");
     } catch (e) {
-      setError(
-        e instanceof ApiError
-          ? e.message
-          : "Secure gateway unreachable · Verify backend server is running"
-      );
+      if (e instanceof ApiError) {
+        if (e.status === 401) {
+          setError("Invalid credentials · Check authorized ID or passcode");
+        } else if (e.status === 404) {
+          setError("Auth endpoint not found (404) · Verify backend server is running on port 8000");
+        } else {
+          setError(e.message || "Authentication failed");
+        }
+      } else {
+        setError("Secure gateway unreachable · Verify backend server is running on http://localhost:8000");
+      }
     }
   });
 

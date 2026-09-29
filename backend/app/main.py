@@ -1,4 +1,4 @@
-﻿"""FastAPI entry point - the single door every request walks through."""
+"""FastAPI entry point - the single door every request walks through."""
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -42,6 +42,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(AuditMiddleware)
+
+
+@app.get("/")
+def root():
+    return {"message": "PolarOps API is running", "status": "ok"}
 
 
 @app.get("/health")

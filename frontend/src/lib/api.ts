@@ -1,7 +1,11 @@
 import { useAuthStore } from "../stores/auth";
 import { loadSnapshot, saveSnapshot } from "./db";
 
-const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const rawApiUrl = import.meta.env.VITE_API_URL;
+const API_URL: string =
+  typeof rawApiUrl === "string" && rawApiUrl.trim().length > 0
+    ? rawApiUrl.trim().replace(/\/+$/, "")
+    : "http://localhost:8000";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }

@@ -44,5 +44,23 @@ export default defineConfig({
       }
     })
   ],
-  server: { port: 5173 }
+  server: {
+    port: 5173,
+    proxy: {
+      "/auth": { target: "http://localhost:8000", changeOrigin: true },
+      "/stations": { target: "http://localhost:8000", changeOrigin: true },
+      "/cargo": { target: "http://localhost:8000", changeOrigin: true },
+      "/indents": { target: "http://localhost:8000", changeOrigin: true },
+      "/inventory": { target: "http://localhost:8000", changeOrigin: true },
+      "/voyages": { target: "http://localhost:8000", changeOrigin: true },
+      "/personnel": { target: "http://localhost:8000", changeOrigin: true },
+      "/assets": { target: "http://localhost:8000", changeOrigin: true },
+      "/audit": { target: "http://localhost:8000", changeOrigin: true },
+      "/forecast": { target: "http://localhost:8000", changeOrigin: true },
+      "/optimize": { target: "http://localhost:8000", changeOrigin: true },
+      "/emergency": { target: "http://localhost:8000", changeOrigin: true },
+      "/sync": { target: "http://localhost:8000", changeOrigin: true },
+      "/health": { target: "http://localhost:8000", changeOrigin: true },
+    }
+  }
 });
