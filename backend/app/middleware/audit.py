@@ -16,7 +16,6 @@ from app.models import AuditLog
 WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 SKIP_PATHS = {"/health", "/docs", "/openapi.json", "/redoc"}
 REDACT_KEYS = {"password", "password_hash", "access_token", "qr_token", "authorization"}
-
 _chain_lock = asyncio.Lock()
 
 
@@ -25,20 +24,17 @@ def _redact(body: dict) -> dict:
 
 
 def compute_row_hash(prev_hash, ts, user_id, action, entity, details):
-    payload = "|".join([
-        prev_hash or "GENESIS", ts, user_id or "anonymous",
-        action, entity, json.dumps(details, sort_keys=True, default=str),
-    ])
+    payload = "|".join([prev_hash or "GENESIS", ts, user_id or "anonymous",
+                        action, entity, json.dumps(details, sort_keys=True, default=str)])
     return hashlib.sha256(payload.encode()).hexdigest()
 
 
 def verify_chain(rows):
     prev = None
     for row in rows:
-        expected = compute_row_hash(
-            prev, row.ts.isoformat(), str(row.user_id) if row.user_id else None,
-            row.action, row.entity, row.details or {},
-        )
+        expected = compute_row_hash(prev, row.ts.isoformat(),
+                                    str(row.user_id) if row.user_id else None,
+                                    row.action, row.entity, row.details or {})
         if row.prev_hash != prev or row.row_hash != expected:
             return row.id
         prev = row.row_hash
@@ -72,12 +68,10 @@ class AuditMiddleware(BaseHTTPMiddleware):
                 except ValueError:
                     continue
             action = f"{request.method} /{'/'.join(parts)}"
-            extra = getattr(request.state, "audit", None) or {}
-            details = {"body": body, **extra}
+            details = {"body": body, **(getattr(request.state, "audit", None) or {})}
             async with _chain_lock, AsyncSessionLocal() as db:
-                prev = (await db.execute(
-                    select(AuditLog.row_hash).order_by(AuditLog.id.desc()).limit(1)
-                )).scalar_one_or_none()
+                prev = (await db.execute(select(AuditLog.row_hash)
+                        .order_by(AuditLog.id.desc()).limit(1))).scalar_one_or_none()
                 ts = datetime.now(timezone.utc)
                 row_hash = compute_row_hash(prev, ts.isoformat(),
                                             str(user_id) if user_id else None,
