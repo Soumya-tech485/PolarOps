@@ -165,7 +165,7 @@ export function WhatIfPanel() {
 
           {/* Mandatory Air-Drop Alert Card */}
           {data.airdrop.length > 0 ? (
-            <div className="rounded-2xl border-2 border-rose-500/50 bg-gradient-to-r from-rose-950/40 via-[#141021] to-[#0a1424] p-5 shadow-2xl">
+            <div className="rounded-2xl border-2 border-rose-500/50 bg-gradient-to-r from-rose-950/40 via-[#141021] to-[#0a1424] p-6 shadow-2xl mt-6">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-rose-500/30 pb-3">
                 <div>
                   <div className="flex items-center gap-2">
@@ -178,7 +178,7 @@ export function WhatIfPanel() {
                     The items below will reach zero stock before the delayed vessel arrives. Dispatch ski-equipped transport aircraft (IL-76 / Twin Otter) from Cape Town / Patriot Hills.
                   </p>
                 </div>
-                <span className="rounded bg-rose-600 px-3 py-1 text-xs font-mono font-bold text-white uppercase tracking-wider shadow-md animate-pulse">
+                <span className="rounded bg-rose-600 px-3 py-1.5 text-[10px] font-mono font-bold text-white uppercase tracking-wider shadow-md animate-pulse whitespace-nowrap">
                   Flight Sortie Needed
                 </span>
               </div>
@@ -227,10 +227,10 @@ export function WhatIfPanel() {
                   className={`rounded-xl border p-4 shadow-md backdrop-blur-md transition-all hover:scale-[1.01] ${TIER_BORDER[line.risk_tier]}`}
                 >
                   <header className="mb-2 flex items-baseline justify-between gap-2">
-                    <h4 className="font-bold text-white text-base truncate font-display" title={line.name}>
+                    <h4 className="font-bold text-white text-sm truncate font-display" title={line.name}>
                       {line.name}
                     </h4>
-                    <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider border font-mono ${TIER_BADGE[line.risk_tier]}`}>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider border font-mono ${TIER_BADGE[line.risk_tier]}`}>
                       {line.risk_tier}
                     </span>
                   </header>

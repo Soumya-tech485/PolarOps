@@ -1,4 +1,4 @@
-﻿import L from "leaflet";
+import L from "leaflet";
 import { MapContainer, Marker, Polyline, TileLayer, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -12,7 +12,7 @@ export function StationMap({ stations, routeNames }: { stations: Station[]; rout
   const onRoute = stations.filter((s) => routeNames.some((n) => n.toLowerCase().includes(s.name.toLowerCase())));
   const positions = onRoute.map((s) => [s.lat ?? -69, s.lon ?? 40] as [number, number]);
   return (
-    <div className="h-72 overflow-hidden rounded-card border border-muted/30">
+    <div className="h-[450px] w-full overflow-hidden rounded-card border border-muted/30">
       <MapContainer center={[-68, 40]} zoom={3} style={{ height: "100%", width: "100%" }} scrollWheelZoom={false}>
         <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {positions.length > 1 && <Polyline positions={positions} pathOptions={{ color: "#1f6fb0", dashArray: "6 4" }} />}

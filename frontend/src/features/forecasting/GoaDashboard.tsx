@@ -177,9 +177,9 @@ export function GoaDashboard() {
                 className="relative overflow-hidden rounded-2xl border border-[#1e3860] bg-gradient-to-br from-[#0c192e] to-[#071120] p-5 shadow-xl transition-all hover:border-cyan-500/40"
               >
                 <div className="absolute top-0 right-0 h-1 w-full bg-gradient-to-r from-transparent via-cyan-400 to-sky-500" />
-                <header className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
+                <header className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-[#162a45] pb-3">
+                  <div className="flex-1 min-w-[200px]">
+                    <div className="flex flex-wrap items-center gap-2">
                       <h4 className="text-lg font-bold text-white font-display">{s.name}</h4>
                       <span className="rounded bg-cyan-950/80 px-2 py-0.5 font-mono text-[10px] font-bold text-cyan-300 border border-cyan-500/30">
                         {s.code}
@@ -190,7 +190,7 @@ export function GoaDashboard() {
                     </p>
                   </div>
 
-                  <div className="text-right">
+                  <div className="text-left md:text-right shrink-0 bg-[#0c182c] px-3 py-1.5 rounded-lg border border-[#1b3457]">
                     <span className="text-[10px] uppercase font-bold text-slate-400 block font-mono">
                       Vessel Horizon
                     </span>

@@ -114,7 +114,7 @@ export function ForecastPanel() {
       )}
 
       {/* Item Forecast Grid */}
-      <div className="grid grid-cols-1 gap-md md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {filteredLines.map((line) => {
           const etaDays = forecast.data?.eta_days ?? 30;
           const daysLeft = line.days_remaining ?? 999;
@@ -123,9 +123,9 @@ export function ForecastPanel() {
           return (
             <article
               key={line.item_id}
-              className={`rounded-xl border p-md shadow-md backdrop-blur-md transition-all hover:scale-[1.01] ${TIER_BORDER[line.risk_tier]}`}
+              className={`rounded-xl border p-4 shadow-md backdrop-blur-md transition-all hover:scale-[1.01] ${TIER_BORDER[line.risk_tier]}`}
             >
-              <header className="mb-xs flex items-baseline justify-between gap-sm">
+              <header className="mb-2 flex items-baseline justify-between gap-2">
                 <h4 className="font-bold text-white text-base truncate" title={line.name}>
                   {line.name}
                 </h4>
@@ -134,7 +134,7 @@ export function ForecastPanel() {
                 </span>
               </header>
 
-              <div className="my-sm">
+              <div className="my-3">
                 <div className="flex items-baseline justify-between font-mono">
                   <span className="text-2xl font-bold text-white">
                     {line.days_remaining !== null ? `${line.days_remaining}d` : "∞"}
@@ -176,7 +176,7 @@ export function ForecastPanel() {
                 </div>
               </div>
 
-              <div className="mt-md border-t border-[#182b45] pt-sm">
+              <div className="mt-4 border-t border-[#182b45] pt-3">
                 <span className="text-[10px] uppercase font-bold text-slate-400 block mb-0.5">
                   Tactical Protocol:
                 </span>
@@ -189,7 +189,7 @@ export function ForecastPanel() {
         })}
 
         {filteredLines.length === 0 && !forecast.isLoading && (
-          <div className="col-span-full rounded-xl border border-[#1b3457] bg-[#0d1a2d] p-lg text-center text-slate-400">
+          <div className="col-span-full rounded-xl border border-[#1b3457] bg-[#0d1a2d] p-6 text-center text-slate-400">
             No items match the selected filter criteria.
           </div>
         )}
