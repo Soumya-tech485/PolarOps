@@ -20,7 +20,7 @@ class Settings:
     ENV: str = os.environ.get("ENV", "dev")
     CORS_ORIGINS: tuple = tuple(
         x.strip() for x in os.environ.get(
-            "CORS_ORIGINS", "http://localhost:5173,https://polar-ops-nine.vercel.app"
+            "CORS_ORIGINS", "http://localhost:5173,https://polar-ops-nine.vercel.app,https://polarops-api-6ki8.onrender.com"
         ).split(",") if x.strip()
     )
 
