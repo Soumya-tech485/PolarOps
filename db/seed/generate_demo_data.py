@@ -1,15 +1,55 @@
+﻿"""One command that fills the whole demo database, reproducibly.
+Run from the REPO ROOT:  python db/seed/generate_demo_data.py
+"""
 import asyncio
 import os
 import random
 import uuid
 from datetime import date, timedelta
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 import asyncpg
 from dotenv import load_dotenv
 from passlib.hash import bcrypt
 
 load_dotenv(os.path.join("backend", ".env"))
-DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "")
+
+def build_asyncpg_dsn(database_url: str) -> str:
+    """Convert SQLAlchemy asyncpg URL to asyncpg DSN format."""
+    # Remove the +asyncpg driver suffix
+    url = database_url.replace("+asyncpg", "")
+    parsed = urlparse(url)
+    
+    # Parse query parameters
+    query_params = parse_qs(parsed.query)
+    
+    # Convert sslmode to ssl for asyncpg
+    if "sslmode" in query_params:
+        sslmode = query_params.pop("sslmode")[0]
+        # asyncpg uses ssl parameter: "require", "verify-full", "verify-ca", "allow", "prefer", "disable"
+        query_params["ssl"] = [sslmode]
+    
+    # Rebuild query string
+    new_query = urlencode(query_params, doseq=True)
+    
+    # Reconstruct URL without query (asyncpg DSN uses keyword args)
+    # asyncpg.connect() prefers keyword arguments, but we can also use DSN string
+    # For DSN string, we need to format it properly
+    dsn = urlunparse((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        parsed.params,
+        new_query,
+        parsed.fragment
+    ))
+    return dsn
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable not set. Check backend/.env")
+
+DSN = build_asyncpg_dsn(DATABASE_URL)
 
 ADMIN = uuid.UUID("aaaaaaaa-0000-0000-0000-000000000001")
 LOGI = uuid.UUID("aaaaaaaa-0000-0000-0000-000000000002")
@@ -49,7 +89,7 @@ async def main() -> None:
            ('88888888-0000-0000-0000-000000000001', 'GEN-BHA-01', 'Generator 1', $1, 'running', false),
            ('88888888-0000-0000-0000-000000000002', 'GEN-BHA-02', 'Generator 2', $1, 'faulty', true),
            ('88888888-0000-0000-0000-000000000003', 'SNW-MAI-01', 'Snow vehicle', $2, 'running', false)""",
-        BHA, BHA, MAI)
+        BHA, MAI)
 
     await conn.close()
 
@@ -60,7 +100,6 @@ async def main() -> None:
 
     conn = await asyncpg.connect(DSN)
 
-    # Priority-1 line tied to the FAULTY generator: optimizer must refuse it
     await conn.execute(
         """INSERT INTO cargo_items (id, name, category, weight_kg, volume_m3, priority, quantity, station_id, asset_id, box_label)
            VALUES ('55555555-5555-5555-5555-000000000011', 'Spare generator GEN-BHA-02', 'spares',
@@ -79,10 +118,10 @@ async def main() -> None:
             rows.append((cid(4), float(rng.randint(1, 3)), d))
     await conn.executemany(
         """INSERT INTO consumption_events (cargo_item_id, quantity, consumed_by, consumed_at)
-           VALUES ($1, $2, $3, $4::date)""",
-        [(item, qty, STAT, d.isoformat()) for item, qty, d in rows])
+           VALUES ($1, $2, $3, $4)""",
+        [(item, qty, STAT, d) for item, qty, d in rows])
     print("consumption events:", len(rows))
-    print("DEMO DATABASE READY — logins: admin@ / logistics@ / station.bharati@  pw: polar123")
+    print("DEMO DATABASE READY â€” logins: admin@ / logistics@ / station.bharati@  pw: polar123")
     await conn.close()
 
 

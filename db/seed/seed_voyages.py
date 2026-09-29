@@ -1,12 +1,14 @@
+﻿"""Insert the two Nov-Mar season voyages (Cape Town loop, real pattern)."""
 import asyncio
 import os
 import uuid
+from datetime import date
 
 import asyncpg
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join("backend", ".env"))
-DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "")
+DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "").replace("sslmode=", "ssl=")
 
 VOYAGES = [
     ("11111111-1111-1111-1111-111111111111",
@@ -21,9 +23,9 @@ async def main() -> None:
     for vid, route, dep, arr, kg, m3 in VOYAGES:
         await conn.execute(
             """INSERT INTO voyages (id, route, depart_date, arrive_date, status, capacity_kg, capacity_m3)
-               VALUES ($1, $2::text[], $3::date, $4::date, 'planned', $5, $6)
+               VALUES ($1, $2::text[], $3, $4, 'planned', $5, $6)
                ON CONFLICT (id) DO NOTHING""",
-            uuid.UUID(vid), route, dep, arr, kg, m3,
+            uuid.UUID(vid), route, date.fromisoformat(dep), date.fromisoformat(arr), kg, m3,
         )
     print("voyages seeded:", await conn.fetchval("SELECT count(*) FROM voyages"))
     await conn.close()

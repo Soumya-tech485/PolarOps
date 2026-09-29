@@ -59,16 +59,17 @@ export function startSyncLoop(): void {
 
 async function onlineFirst<T>(direct: () => Promise<T>, entity: string,
                               payload: Record<string, unknown>,
-                              entityId: string | null = null, baseTs: string | null = null): Promise<T> {
+                              entityId: string | null = null, baseTs: string | null = null): Promise<T | undefined> {
   if (navigator.onLine) {
     try {
       return await direct();
     } catch (e) {
       if (e instanceof ApiError) throw e;
+      // Network error or other non-ApiError: fall through to queue
     }
   }
   await enqueue(entity, payload, entityId, baseTs);
-  return undefined as T;
+  return undefined;
 }
 
 export const mut = {

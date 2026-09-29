@@ -23,7 +23,8 @@ async def lifespan(app: FastAPI):
         scheduler.add_job(emergency_service.scheduled_escalation_check, "interval", hours=1)
         scheduler.start()
     yield
-    scheduler.shutdown(wait=False)
+    if scheduler.running:
+        scheduler.shutdown(wait=False)
 
 
 app = FastAPI(title="PolarOps API", version="1.0.0", lifespan=lifespan)

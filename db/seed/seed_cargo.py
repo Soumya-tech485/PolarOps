@@ -6,7 +6,7 @@ import asyncpg
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join("backend", ".env"))
-DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "")
+DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "").replace("sslmode=", "ssl=")
 
 BHA = uuid.UUID("bbbbbbbb-0000-0000-0000-000000000001")
 MAI = uuid.UUID("bbbbbbbb-0000-0000-0000-000000000002")
