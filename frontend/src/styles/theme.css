@@ -23,6 +23,28 @@
   --color-alert-rose: #f43f5e;
   --color-alert-amber: #f59e0b;
   --color-alert-emerald: #10b981;
+
+  /* ─── Semantic Design Tokens ────────────────────────────────────────── */
+  /* Semantic color aliases used by UI components */
+  --color-brand:    #0284c7;   /* bg-brand  */
+  --color-critical: #f43f5e;   /* bg-critical */
+  --color-surface:  #0d1a2d;   /* bg-surface */
+  --color-ice:      #111e33;   /* bg-ice */
+  --color-ink:      #e2eaf4;   /* text-ink */
+  --color-muted:    #64748b;   /* text-muted / border-muted */
+  --color-label:    #94a3b8;   /* text-label */
+
+  /* ─── Spacing Scale ─────────────────────────────────────────────────── */
+  /* Named spacing tokens: xs=4px, sm=8px, md=16px, lg=24px */
+  --spacing-xs: 0.25rem;   /* 4px  */
+  --spacing-sm: 0.5rem;    /* 8px  */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+
+  /* ─── Border-Radius Tokens ──────────────────────────────────────────── */
+  --radius-control: 0.5rem;   /* rounded-control */
+  --radius-card:    0.75rem;  /* rounded-card    */
+  --radius-chip:    9999px;   /* rounded-chip    */
 }
 
 @layer base {

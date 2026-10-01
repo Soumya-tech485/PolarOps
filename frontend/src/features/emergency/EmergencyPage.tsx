@@ -198,14 +198,14 @@ export function EmergencyPage() {
             <div>
               <div className="flex items-center gap-2.5">
                 <h2 className="font-display text-lg font-bold tracking-tight text-white">
-                  Antarctic Search & Rescue (SAR) Incident Center
+                  Emergency & Rescue Alerts
                 </h2>
                 <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase border ${activeIncidents.length ? "bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse" : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"}`}>
-                  {activeIncidents.length ? `${activeIncidents.length} ACTIVE DISTRESS EVENT(S)` : "DEFCON 5 · STANDBY NOMINAL"}
+                  {activeIncidents.length ? `${activeIncidents.length} ACTIVE DISTRESS EVENT(S)` : "STANDBY"}
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Direct satlink integration with COSPAS-SARSAT (406 MHz), NCPOR Goa SAR Command, and MRCC Cape Town
+                Connected to NCPOR Goa and Cape Town Rescue Commands.
               </p>
             </div>
           </div>
@@ -243,10 +243,10 @@ export function EmergencyPage() {
               <div className="flex items-center gap-2">
                 <Radio className="h-4 w-4 text-rose-400" />
                 <h3 className="font-display text-sm font-bold text-white uppercase tracking-wider">
-                  Distress Beacon Dispatch
+                  Report Emergency
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">OFFLINE-RESILIENT</span>
+              <span className="text-[10px] font-mono text-slate-400">OFFLINE READY</span>
             </div>
 
             <div className="space-y-4">
@@ -263,7 +263,7 @@ export function EmergencyPage() {
                   <option value="">Select Antarctic Station / Sector…</option>
                   {(stations ?? []).map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.name} ({s.code}){s.lat !== null ? ` · ${s.lat.toFixed(2)}°S, ${s.lon?.toFixed(2)}°E` : ""}
+                      {s.name} ({s.code}){typeof s.lat === "number" ? ` · ${s.lat.toFixed(2)}°S, ${typeof s.lon === "number" ? s.lon.toFixed(2) : ""}°E` : ""}
                     </option>
                   ))}
                 </select>
@@ -321,10 +321,10 @@ export function EmergencyPage() {
                     )}
                     <div>
                       <span className="text-xs font-semibold text-white block">
-                        Safety Broadcast Interlock
+                        Safety Lock
                       </span>
                       <span className="text-[10px] text-slate-400 font-mono">
-                        {isArmed ? "Interlock DISARMED · Ready to transmit" : "Armed to prevent accidental signal"}
+                        {isArmed ? "Unlocked · Ready to report" : "Locked to prevent accidental reporting"}
                       </span>
                     </div>
                   </div>
@@ -337,7 +337,7 @@ export function EmergencyPage() {
                         : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                     }`}
                   >
-                    {isArmed ? "DISARM" : "ARM SWITCH"}
+                    {isArmed ? "UNLOCK" : "LOCK"}
                   </button>
                 </div>
 
@@ -352,7 +352,7 @@ export function EmergencyPage() {
                   }`}
                 >
                   <Send className="h-4 w-4" />
-                  <span>{sos.isPending ? "TRANSMITTING TO SATELLITE…" : "BROADCAST POLAR DISTRESS SIGNAL"}</span>
+                  <span>{sos.isPending ? "SENDING ALERT…" : "SEND EMERGENCY ALERT"}</span>
                 </Button>
               </div>
             </div>
@@ -485,8 +485,8 @@ export function EmergencyPage() {
                   {/* Incident Notes Readout */}
                   <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3.5 mb-4">
                     <div className="flex items-center justify-between text-[10px] font-mono uppercase text-slate-400 mb-1.5">
-                      <span>Field Dispatch Log / Telemetry:</span>
-                      <span className="text-slate-500">SHA-256 Ledger Verified</span>
+                      <span>Situation Log:</span>
+                      <span className="text-slate-500">Verified</span>
                     </div>
                     <p className="text-xs font-mono text-cyan-100 leading-relaxed">
                       "{String(ev.payload?.notes || "No notes attached to beacon dispatch.")}"
@@ -551,10 +551,10 @@ export function EmergencyPage() {
                 </div>
 
                 <h4 className="font-display text-base font-bold text-white tracking-wide">
-                  Polar Sentry Active · Listening Post Nominal
+                  Emergency Monitoring Active
                 </h4>
-                <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-                  Continuous watch on 406.025 MHz COSPAS-SARSAT transponder feed and HF emergency frequencies. All Indian Antarctic expedition parties report safe status.
+                <p className="text-xs text-slate-400 mt-1 max-w-[450px] mx-auto">
+                  All polar stations and expedition parties are safe and being actively monitored.
                 </p>
 
                 <div className="mt-5 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-3">

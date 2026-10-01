@@ -13,15 +13,15 @@ export function AuditPage() {
   return (
     <section className="space-y-6">
       {/* Header and Verification Trigger */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#1b3457] bg-[#0c182c] p-5 shadow-lg">
-        <div>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            <h3 className="font-display text-lg font-bold text-white">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-2xl hud-panel-glow tactical-box">
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-6 w-6 text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+            <h3 className="font-display text-xl font-bold text-white drop-shadow-md">
               Cryptographic Hash-Chained Audit Ledger
             </h3>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-300 mt-1 opacity-90">
             Append-only tamper-evident blockchain ledger enforced by PostgreSQL row-level immutability triggers
           </p>
         </div>
@@ -52,26 +52,26 @@ export function AuditPage() {
       {rows.isLoading && <StateBanner mood="sync" text="Loading ledger blocks from database…" />}
 
       {/* Block Explorer Table */}
-      <div className="overflow-hidden rounded-2xl border border-[#1a3152] bg-[#07101d] shadow-xl">
+      <div className="overflow-hidden rounded-2xl hud-panel-subtle shadow-2xl ring-1 ring-white/5 mt-2">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs font-mono">
             <thead>
-              <tr className="border-b border-[#1b2f4a] bg-[#0a1526] text-[11px] font-bold text-slate-400 uppercase tracking-wider font-sans">
-                <th className="px-5 py-3.5">Block #</th>
-                <th className="px-5 py-3.5">Timestamp (UTC)</th>
-                <th className="px-5 py-3.5">Mutation Event</th>
-                <th className="px-5 py-3.5">Target Entity</th>
-                <th className="px-5 py-3.5">SHA-256 Linkage</th>
-                <th className="px-5 py-3.5 text-right font-sans">Inspect</th>
+              <tr className="border-b border-[#1b2f4a]/60 bg-[#0a1526]/80 backdrop-blur-md text-[11px] font-bold text-cyan-500 uppercase tracking-widest font-sans">
+                <th className="px-5 py-4">Block #</th>
+                <th className="px-5 py-4">Timestamp (UTC)</th>
+                <th className="px-5 py-4">Mutation Event</th>
+                <th className="px-5 py-4">Target Entity</th>
+                <th className="px-5 py-4">SHA-256 Linkage</th>
+                <th className="px-5 py-4 text-right font-sans">Inspect</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#14233a]">
+            <tbody className="divide-y divide-[#14233a]/50">
               {(rows.data ?? []).map((r) => (
-                <tr key={r.id} className="transition hover:bg-[#0e1c31]/80">
-                  <td className="px-5 py-3.5 font-bold text-cyan-300">
+                <tr key={r.id} className="transition-all duration-300 hover:bg-cyan-900/10 group cursor-default">
+                  <td className="px-5 py-4 font-bold text-cyan-300 group-hover:text-cyan-200 transition-colors">
                     #{r.id}
                   </td>
-                  <td className="px-5 py-3.5 text-slate-400">
+                  <td className="px-5 py-4 text-slate-400 group-hover:text-slate-300 transition-colors">
                     {r.ts?.slice(0, 19).replace("T", " ")}
                   </td>
                   <td className="px-5 py-3.5 font-sans font-semibold text-white">
@@ -107,12 +107,12 @@ export function AuditPage() {
         </div>
 
         {expandedRow !== null && (
-          <div className="border-t border-[#1b2f4a] bg-[#050b14] p-4">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2 font-mono flex items-center gap-1.5">
-              <Terminal className="h-3.5 w-3.5 text-cyan-400" />
+          <div className="border-t border-cyan-900/40 bg-[#030812] p-5 inset-shadow-sm">
+            <span className="text-[10px] font-bold text-cyan-500 uppercase tracking-widest block mb-3 font-mono flex items-center gap-2">
+              <Terminal className="h-4 w-4 text-cyan-400" />
               <span>Decoded Block Payload Data for Block #{expandedRow}:</span>
             </span>
-            <pre className="rounded-lg bg-[#02050a] p-3 text-[11px] font-mono text-cyan-300 overflow-x-auto border border-[#14263f]">
+            <pre className="rounded-xl bg-[#010306] p-4 text-[11px] font-mono text-cyan-300 overflow-x-auto border border-cyan-900/30 shadow-inner">
               {JSON.stringify(
                 rows.data?.find((r) => r.id === expandedRow)?.details ?? {},
                 null,

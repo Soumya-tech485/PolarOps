@@ -162,14 +162,14 @@ export function VoyageBoard() {
                   <ul className="space-y-1.5 text-xs font-mono">
                     {detail.data.cargo.map((c) => (
                       <li
-                        key={c.id}
+                        key={c.indent_id}
                         className="flex items-center justify-between rounded-lg bg-slate-900/60 px-2.5 py-1.5 border border-slate-800/80"
                       >
-                        <span className="font-sans text-white truncate max-w-[130px]" title={c.name}>
-                          {c.name}
+                        <span className="font-sans text-white truncate max-w-[130px]" title={c.item_name}>
+                          {c.item_name}
                         </span>
                         <span className="text-cyan-300 font-bold">
-                          {c.quantity} units · P{c.priority}
+                          {c.qty} units
                         </span>
                       </li>
                     ))}

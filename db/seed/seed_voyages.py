@@ -1,4 +1,4 @@
-﻿"""Insert the two Nov-Mar season voyages (Cape Town loop, real pattern)."""
+"""Insert the two Nov-Mar season voyages (Cape Town loop, real pattern)."""
 import asyncio
 import os
 import uuid
@@ -8,7 +8,7 @@ import asyncpg
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join("backend", ".env"))
-DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "").replace("sslmode=", "ssl=")
+DSN = os.environ["DATABASE_URL"].replace("+asyncpg", "").replace("ssl=", "sslmode=")
 
 VOYAGES = [
     ("11111111-1111-1111-1111-111111111111",

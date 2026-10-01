@@ -54,15 +54,15 @@ export function WhatIfPanel() {
             <div className="flex items-center gap-2">
               <Zap className="h-5 w-5 text-amber-400" />
               <h3 className="font-display text-lg font-bold text-white">
-                Polar Sea-Ice & Weather Delay Simulator (What-If Solver)
+                Supply Delay Simulator
               </h3>
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
-              Simulate supply chain resilience against pack-ice delays, blizzard holds, and vessel itinerary slips
+              Simulate how delays in ship arrivals affect station inventory.
             </p>
           </div>
           <span className="rounded bg-cyan-950/70 px-2 py-0.5 text-[10px] font-mono font-bold tracking-widest text-cyan-300 border border-cyan-500/30 uppercase">
-            OR-TOOLS & HEURISTIC ENGINE
+            PREDICTIVE MODEL
           </span>
         </div>
 
@@ -87,7 +87,7 @@ export function WhatIfPanel() {
           <div className="flex items-center gap-3 rounded-xl border border-[#1b3457] bg-[#07101d] px-3 py-1.5">
             <Sliders className="h-4 w-4 text-cyan-400" />
             <label className="text-xs font-semibold text-slate-300" htmlFor="delay-slider">
-              Itinerary Delay: <span className="font-bold text-cyan-300 font-mono">+{delayDays} Days</span>
+              Ship Delay: <span className="font-bold text-cyan-300 font-mono">+{delayDays} Days</span>
             </label>
             <input
               id="delay-slider"
@@ -102,7 +102,7 @@ export function WhatIfPanel() {
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-slate-400 mr-1 font-mono">Slip Presets:</span>
+            <span className="text-xs text-slate-400 mr-1 font-mono">Presets:</span>
             {QUICK_DELAYS.map((d) => (
               <button
                 key={d}
@@ -121,7 +121,7 @@ export function WhatIfPanel() {
         </div>
       </header>
 
-      {isLoading && <StateBanner mood="sync" text="Executing Monte Carlo timeline stress simulation under delay…" />}
+      {isLoading && <StateBanner mood="sync" text="Simulating inventory levels with delay..." />}
       {isError && <StateBanner mood="critical" text={(error as Error).message} />}
 
       {data && (
@@ -130,35 +130,35 @@ export function WhatIfPanel() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="rounded-xl border border-[#1b3457] bg-[#0c182c] p-4 shadow-md">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                Simulated Delay Slip
+                Simulated Delay
               </span>
               <p className="mt-1 text-2xl font-bold font-mono text-cyan-300">+{data.delay_days} Days</p>
-              <span className="text-[11px] text-slate-400">Pack-ice & blizzard hold</span>
+              <span className="text-[11px] text-slate-400">Added delay time</span>
             </div>
 
             <div className="rounded-xl border border-[#1b3457] bg-[#0c182c] p-4 shadow-md">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                Revised Vessel ETA
+                New Ship Arrival
               </span>
               <p className="mt-1 text-2xl font-bold font-mono text-white">T-{data.new_eta_days} Days</p>
-              <span className="text-[11px] text-slate-400">Postponed resupply arrival</span>
+              <span className="text-[11px] text-slate-400">Updated arrival time</span>
             </div>
 
             <div className="rounded-xl border border-[#1b3457] bg-[#0c182c] p-4 shadow-md">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                Critical Stockouts
+                Critical Shortages
               </span>
               <p className="mt-1 text-2xl font-bold font-mono text-rose-400">{criticalCount}</p>
-              <span className="text-[11px] text-slate-400">{warningCount} lines in warning threshold</span>
+              <span className="text-[11px] text-slate-400">{warningCount} items running low</span>
             </div>
 
             <div className="rounded-xl border border-[#1b3457] bg-[#0c182c] p-4 shadow-md">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                Air-Drop Shortfall
+                Emergency Delivery Needed
               </span>
               <p className="mt-1 text-2xl font-bold font-mono text-rose-400">{data.airdrop.length}</p>
               <span className="text-[11px] text-slate-400 font-mono">
-                {totalAirdropShortfall.toFixed(1)} units air payload
+                {totalAirdropShortfall.toFixed(1)} units short
               </span>
             </div>
           </div>
@@ -171,15 +171,15 @@ export function WhatIfPanel() {
                   <div className="flex items-center gap-2">
                     <Plane className="h-5 w-5 text-rose-400" />
                     <h3 className="font-display text-base font-bold text-rose-200">
-                      MANDATORY AIR-DROP ROSTER (AERIAL RE-SUPPLY FLIGHT REQUIRED)
+                      EMERGENCY AIR-DROP REQUIRED
                     </h3>
                   </div>
                   <p className="text-xs text-slate-300 mt-0.5">
-                    The items below will reach zero stock before the delayed vessel arrives. Dispatch ski-equipped transport aircraft (IL-76 / Twin Otter) from Cape Town / Patriot Hills.
+                    These items will run out before the delayed ship arrives. Schedule an emergency air-drop.
                   </p>
                 </div>
                 <span className="rounded bg-rose-600 px-3 py-1.5 text-[10px] font-mono font-bold text-white uppercase tracking-wider shadow-md animate-pulse whitespace-nowrap">
-                  Flight Sortie Needed
+                  Flight Required
                 </span>
               </div>
 
@@ -207,9 +207,9 @@ export function WhatIfPanel() {
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-4 flex items-center gap-3">
               <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
               <div>
-                <h4 className="font-bold text-emerald-300 text-sm">Safe Operational Margin · Zero Air-Drops Needed</h4>
+                <h4 className="font-bold text-emerald-300 text-sm">Safe Inventory Levels · No Emergency Flights Needed</h4>
                 <p className="text-xs text-slate-400">
-                  Station reserves can sustain the simulated +{data.delay_days}-day delay without triggering stockout conditions.
+                  Station inventory can sustain the +{data.delay_days}-day delay without running out of critical items.
                 </p>
               </div>
             </div>
@@ -218,7 +218,7 @@ export function WhatIfPanel() {
           {/* Item-by-item Supply Prognosis */}
           <div>
             <h3 className="mb-3 text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">
-              Item-by-Item Supply Horizons Under +{data.delay_days}d Added Delay
+              Inventory Forecast (+{data.delay_days}d Delay)
             </h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {data.lines.map((line) => (

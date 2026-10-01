@@ -1,8 +1,7 @@
 import { useAuthStore } from "../stores/auth";
 import { loadSnapshot, saveSnapshot } from "./db";
 
-const rawApiUrl = import.meta.env.VITE_API_URL;
-const API_URL: string = "https://polarops-api-6ki8.onrender.com";
+const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
@@ -86,7 +85,7 @@ export const api = {
   voyages: {
     list: () => request<Voyage[]>("/voyages"),
     create: (body: Partial<Voyage>) => request<Voyage>("/voyages", { method: "POST", body }),
-    detail: (id: string) => request<{ voyage: Voyage; cargo: Cargo[]; crew: { personnel_id: string; full_name: string; role_on_board: string | null }[] }>(`/voyages/${id}`),
+    detail: (id: string) => request<{ voyage: Voyage; cargo: ManifestLine[]; crew: { personnel_id: string; full_name: string; role_on_board: string | null }[] }>(`/voyages/${id}`),
     assign: (id: string, personnel_id: string, role_on_board?: string) => request<unknown>(`/voyages/${id}/assign`, { method: "POST", body: { personnel_id, role_on_board } })
   },
   personnel: {

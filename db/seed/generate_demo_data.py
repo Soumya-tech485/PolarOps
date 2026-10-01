@@ -3,8 +3,13 @@ Run from the REPO ROOT:  python db/seed/generate_demo_data.py
 """
 import asyncio
 import sys
-if sys.platform == 'win32':
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import socket
+
+# Force IPv4 for all socket connections to fix Neon DB IPv6 blackhole issues
+_orig_getaddrinfo = socket.getaddrinfo
+def _getaddrinfo_ipv4(host, port, family=0, type=0, proto=0, flags=0):
+    return _orig_getaddrinfo(host, port, socket.AF_INET, type, proto, flags)
+socket.getaddrinfo = _getaddrinfo_ipv4
 import os
 import random
 import uuid

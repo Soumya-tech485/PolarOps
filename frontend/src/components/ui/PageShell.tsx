@@ -56,8 +56,8 @@ export function PageShell({
   return (
     <div className="min-h-screen bg-[#04080f] text-[#d1e0f0] font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Precision Telemetry Status Ribbon */}
-      <header className="border-b border-[#14233a] bg-[#060c17]/95 px-4 py-2 backdrop-blur-md sticky top-0 z-40">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-2 gap-x-4">
+      <header className="border-b border-cyan-900/30 bg-[#030712]/85 px-4 py-3 backdrop-blur-xl sticky top-0 z-40 shadow-[0_4px_30px_rgba(0,0,0,0.6)]">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-3 gap-x-4">
           {/* Logo & Department Identification */}
           <div className="flex items-center gap-3">
             <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500/20 via-sky-600/30 to-blue-700/40 border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
@@ -140,8 +140,8 @@ export function PageShell({
               </button>
 
               {roleMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 rounded-xl border border-[#23426c] bg-[#091222] p-2 shadow-2xl z-50 backdrop-blur-xl">
-                  <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-[#1a2d48] mb-1">
+                <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-cyan-900/50 bg-[#050b14]/95 p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 backdrop-blur-2xl ring-1 ring-white/5">
+                  <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-cyan-500 border-b border-cyan-900/40 mb-2">
                     Switch Active Operator Clearance
                   </div>
                   {DEMO_USERS.map((u) => (
@@ -159,12 +159,12 @@ export function PageShell({
                         <span className="font-semibold block">{u.label}</span>
                         <span className="text-[10px] font-mono text-slate-400">{u.email}</span>
                       </div>
-                      <span className="rounded bg-[#132845] px-1.5 py-0.5 text-[9px] font-mono text-cyan-300">
+                      <span className="rounded bg-cyan-950/50 px-2 py-1 text-[9px] font-mono text-cyan-300 border border-cyan-800/50">
                         {u.badge}
                       </span>
                     </button>
                   ))}
-                  <div className="mt-2 pt-2 border-t border-[#1a2d48]">
+                  <div className="mt-2 pt-2 border-t border-cyan-900/40">
                     <button
                       type="button"
                       onClick={() => {

@@ -32,23 +32,23 @@ export function ConflictReview() {
   return (
     <section className="space-y-5">
       {/* Header and Telemetry */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <RefreshCw className="h-5 w-5 text-cyan-400" />
-            <h3 className="text-lg font-bold text-white font-display">
-              Satellite Outbox Synchronization & Conflict Resolution
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-xl hud-panel tactical-box radar-sweep-effect mb-2">
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <RefreshCw className="h-6 w-6 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
+            <h3 className="text-xl font-bold text-white font-display drop-shadow-md">
+              Offline Data Sync & Conflicts
             </h3>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Offline-first optimistic updates, deterministic multi-station merge resolution, and Dexie IndexedDB sync queue
+          <p className="text-xs text-slate-300 mt-1 opacity-90">
+            Manage data that couldn't be synced during satellite blackouts.
           </p>
         </div>
 
         <div className="flex items-center gap-2 font-mono text-xs">
           <span className="rounded-lg bg-sky-500/15 px-3 py-1.5 text-sky-300 border border-sky-500/30 flex items-center gap-1.5">
             <Satellite className="h-3.5 w-3.5" />
-            <span>{pending ?? 0} Pending Uplinks</span>
+            <span>{pending ?? 0} Pending Updates</span>
           </span>
           <span
             className={`rounded-lg px-3 py-1.5 border flex items-center gap-1.5 ${
@@ -58,29 +58,29 @@ export function ConflictReview() {
             }`}
           >
             <AlertTriangle className="h-3.5 w-3.5" />
-            <span>{(queued ?? []).length} Conflicted Mutations</span>
+            <span>{(queued ?? []).length} Sync Conflicts</span>
           </span>
         </div>
       </div>
 
       <StateBanner
         mood={conflicts.length > 0 ? "warning" : "stable"}
-        text={`Active Sync Status: ${conflicts.length} remote conflicts detected · ${(queued ?? []).length} local actions in review queue`}
+        text={`Sync Status: ${conflicts.length} conflicts detected · ${(queued ?? []).length} actions pending review`}
       />
 
       <ul className="space-y-4">
         {(queued ?? []).map((op) => (
           <li
             key={op.client_uuid}
-            className="hud-panel rounded-2xl p-5 border border-amber-500/30 shadow-lg"
+            className="hud-panel-subtle rounded-2xl p-6 border-l-4 border-l-amber-500 shadow-xl transition-all duration-300 hover:shadow-amber-500/10"
           >
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-amber-900/30">
               <span className="font-bold text-white text-sm capitalize flex items-center gap-2">
-                <Layers className="h-4 w-4 text-cyan-400" />
-                <span>Entity: {op.entity}</span>
+                <Layers className="h-4 w-4 text-amber-400" />
+                <span className="tracking-wide">Entity: {op.entity}</span>
               </span>
-              <span className="font-mono text-xs text-slate-400 flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+              <span className="font-mono text-[11px] text-amber-200/60 flex items-center gap-1.5 bg-amber-950/30 px-2.5 py-1 rounded-md border border-amber-900/50">
+                <Clock className="h-3.5 w-3.5" />
                 <span>Timestamp: {op.client_ts.slice(0, 19).replace("T", " ")} UTC</span>
               </span>
             </div>
@@ -101,7 +101,7 @@ export function ConflictReview() {
                 onClick={() => retry(op)}
               >
                 <Play className="h-3 w-3" />
-                <span>Re-apply as New Action</span>
+                <span>Retry Action</span>
               </Button>
               <Button
                 variant="ghost"
@@ -109,20 +109,21 @@ export function ConflictReview() {
                 onClick={() => discard(op)}
               >
                 <Trash2 className="h-3 w-3" />
-                <span>Discard Conflicted Op</span>
+                <span>Discard Action</span>
               </Button>
             </div>
           </li>
         ))}
 
         {(queued ?? []).length === 0 && (
-          <li className="hud-panel rounded-2xl p-8 border border-slate-800 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-              <CheckCircle2 className="h-6 w-6" />
+          <li className="hud-panel rounded-2xl p-10 border border-emerald-900/50 text-center flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.05),transparent_50%)] pointer-events-none" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+              <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h4 className="text-white font-bold text-base font-display">Outbox Completely Synchronized</h4>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Zero conflicting mutations in local IndexedDB storage. All station transactions match the central cryptographic ledger.
+            <h4 className="text-white font-bold text-lg font-display tracking-wide">All Data Synced</h4>
+            <p className="text-sm text-emerald-100/60 mt-2 max-w-[450px] mx-auto">
+              All local actions have been successfully synced with headquarters. No conflicts found.
             </p>
           </li>
         )}

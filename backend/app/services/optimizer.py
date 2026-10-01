@@ -95,11 +95,18 @@ async def solve_loading(db: AsyncSession, voyage_id, apply: bool) -> dict:
         )
     ).all()
 
+    asset_ids = {item.asset_id for indent, item in rows if item.asset_id is not None}
+    assets_map = {}
+    if asset_ids:
+        assets_res = await db.execute(select(Asset).where(Asset.id.in_(asset_ids)))
+        for a in assets_res.scalars().all():
+            assets_map[a.id] = a
+
     candidates: list[Candidate] = []
     for indent, item in rows:
         reason = None
         if item.asset_id is not None:
-            asset = await db.get(Asset, item.asset_id)
+            asset = assets_map.get(item.asset_id)
             if asset is not None and asset.maintenance_due:
                 reason = f"asset {asset.serial} due for maintenance — cannot ship"
         candidates.append(Candidate(

@@ -121,7 +121,50 @@ async def forecast_for_station(db: AsyncSession, station_id) -> dict:
         return {"station_id": station_id, "eta_days": None, "lines": []}
     eta = eta_days_for(station)
     items = (await db.execute(select(CargoItem).where(CargoItem.station_id == station_id))).scalars().all()
-    lines = [await forecast_for_item(db, i, eta) for i in items]
+    
+    if not items:
+        return {"station_id": station_id, "eta_days": eta, "lines": []}
+        
+    item_ids = [i.id for i in items]
+    since = datetime.now(timezone.utc) - timedelta(days=LOOKBACK_DAYS)
+    
+    # Bulk fetch consumption events for all items
+    rows = (
+        await db.execute(
+            select(
+                ConsumptionEvent.cargo_item_id, 
+                func.date(ConsumptionEvent.consumed_at), 
+                func.sum(ConsumptionEvent.quantity)
+            )
+            .where(
+                ConsumptionEvent.cargo_item_id.in_(item_ids),
+                ConsumptionEvent.consumed_at >= since
+            )
+            .group_by(ConsumptionEvent.cargo_item_id, func.date(ConsumptionEvent.consumed_at))
+        )
+    ).all()
+    
+    from collections import defaultdict
+    consumption_map = defaultdict(dict)
+    for c_id, d, q in rows:
+        consumption_map[c_id][d] = float(q)
+        
+    start = datetime.now(timezone.utc).date() - timedelta(days=LOOKBACK_DAYS - 1)
+    
+    lines = []
+    for item in items:
+        by_day = consumption_map.get(item.id, {})
+        series = [by_day.get(start + timedelta(days=i), 0.0) for i in range(LOOKBACK_DAYS)]
+        rate, method = demand_rate(series)
+        days = days_to_stockout(float(item.quantity or 0), rate)
+        tier = risk_tier(days, eta)
+        lines.append({
+            "item_id": item.id, "name": item.name, "category": item.category,
+            "quantity": float(item.quantity or 0), "rate_per_day": round(rate, 4),
+            "method": method, "days_remaining": days, "risk_tier": tier,
+            "recommended_action": recommended_action(tier),
+        })
+        
     lines.sort(key=lambda l: (l["risk_tier"] != "critical", l["risk_tier"] != "warning", l["name"]))
     return {"station_id": station_id, "eta_days": eta, "lines": lines}
 

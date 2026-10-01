@@ -35,9 +35,9 @@ export function PersonnelPage() {
   const emergencyCount = allPeople.filter((p) => p.status === "emergency").length;
 
   const Row = ({ p }: { p: Person }) => (
-    <tr className="transition hover:bg-[#11233d]/60 font-mono">
+    <tr className="transition-all duration-300 hover:bg-cyan-900/20 font-mono group border-b border-[#14233a] last:border-0 cursor-default">
       <td className="px-lg py-md font-sans">
-        <strong className="text-white text-sm block">{p.full_name}</strong>
+        <strong className="text-white text-sm block group-hover:text-cyan-300 transition-colors">{p.full_name}</strong>
         <span className="text-[11px] text-slate-400 font-mono">ID: {p.id.slice(0, 13)}…</span>
       </td>
       <td className="px-lg py-md font-sans text-slate-300 text-xs font-medium">
@@ -102,13 +102,13 @@ export function PersonnelPage() {
   return (
     <section className="space-y-md">
       {/* Header and Telemetry */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-        <div>
-          <h3 className="text-lg font-bold text-white flex items-center gap-2 font-display">
-            <Users className="h-5 w-5 text-cyan-400" />
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-xl hud-panel tactical-box radar-sweep-effect">
+        <div className="relative z-10">
+          <h3 className="text-xl font-bold text-white flex items-center gap-2 font-display drop-shadow-md">
+            <Users className="h-6 w-6 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
             <span>Expedition Personnel & Field Camp Tracking (SAR Muster)</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-300 mt-1.5 opacity-90">
             Real-time personnel deployment, status tracking, and satellite GPS coordinates logging
           </p>
         </div>
@@ -129,12 +129,12 @@ export function PersonnelPage() {
           </div>
 
           <div className="flex items-center gap-xs">
-            <label className="text-xs font-semibold text-slate-300" htmlFor="p-station">
+            <label className="text-xs font-semibold text-cyan-300 uppercase tracking-widest" htmlFor="p-station">
               Filter:
             </label>
             <select
               id="p-station"
-              className="rounded-lg border border-[#23426c] bg-[#091322] px-md py-1.5 text-xs text-white font-medium outline-none focus:border-sky-400 cursor-pointer"
+              className="rounded-lg border border-cyan-800/50 bg-[#091322]/80 px-md py-1.5 text-xs text-cyan-100 font-medium outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/50 cursor-pointer backdrop-blur-md transition-all shadow-inner"
               value={stationId}
               onChange={(e) => setStationId(e.target.value)}
             >
@@ -150,19 +150,19 @@ export function PersonnelPage() {
       </div>
 
       {/* Roster Table Card */}
-      <div className="overflow-hidden rounded-xl border border-[#1c3252] bg-[#0b1728] shadow-md">
+      <div className="overflow-hidden rounded-xl hud-panel-subtle shadow-2xl mt-4 ring-1 ring-white/5">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-[#1b2f4a] bg-[#0d1c31] text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                <th className="px-lg py-md">Personnel Name</th>
-                <th className="px-lg py-md">Role & Specialization</th>
-                <th className="px-lg py-md">Muster Status</th>
-                <th className="px-lg py-md">Last Known Location & Ping</th>
-                <th className="px-lg py-md text-right">Actions</th>
+              <tr className="border-b border-[#1b2f4a] bg-[#0a1424]/80 backdrop-blur-md text-[11px] font-bold text-cyan-500 uppercase tracking-widest">
+                <th className="px-lg py-4">Personnel Name</th>
+                <th className="px-lg py-4">Role & Specialization</th>
+                <th className="px-lg py-4">Muster Status</th>
+                <th className="px-lg py-4">Last Known Location & Ping</th>
+                <th className="px-lg py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#17273e]">
+            <tbody className="divide-y divide-[#17273e]/50">
               {allPeople.map((p) => (
                 <Row key={p.id} p={p} />
               ))}
