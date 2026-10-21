@@ -105,7 +105,7 @@ export function LoginPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col justify-between p-6 sm:p-10 relative overflow-hidden font-sans">
+    <div className="min-h-screen w-full bg-[#030712] text-slate-100 flex flex-col justify-between p-4 sm:p-8 relative overflow-hidden font-sans">
       {/* Subtle Ambient Radial Lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-sky-500/10 blur-[130px] rounded-full pointer-events-none" />
 
@@ -142,8 +142,11 @@ export function LoginPage() {
       </header>
 
       {/* Centered Login Card */}
-      <main className="relative z-10 flex items-center justify-center my-auto py-8">
-        <div className="w-full max-w-md bg-[#0a1120]/80 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-7 sm:p-8">
+      <main className="relative z-10 w-full flex-1 flex items-center justify-center my-auto py-8 px-2">
+        <div
+          className="w-full max-w-[440px] bg-[#0a1120]/90 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-6 sm:p-8 mx-auto box-border"
+          style={{ minWidth: "min(100%, 360px)" }}
+        >
           {/* Card Header */}
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold tracking-tight text-white font-display mb-1.5">
