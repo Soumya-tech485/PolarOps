@@ -142,10 +142,13 @@ export function LoginPage() {
       </header>
 
       {/* Centered Login Card */}
-      <main className="relative z-10 w-full flex-1 flex items-center justify-center my-auto py-8 px-2">
+      <main
+        className="relative z-10 w-full flex-1 flex items-center justify-center my-auto py-8 px-4"
+        style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
         <div
-          className="w-full max-w-[440px] bg-[#0a1120]/90 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-6 sm:p-8 mx-auto box-border"
-          style={{ minWidth: "min(100%, 360px)" }}
+          className="w-full max-w-[440px] bg-[#0a1120]/95 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-6 sm:p-8 mx-auto box-border"
+          style={{ width: "100%", maxWidth: "440px", minWidth: "300px", boxSizing: "border-box" }}
         >
           {/* Card Header */}
           <div className="text-center mb-6">
