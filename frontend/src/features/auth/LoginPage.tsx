@@ -1,14 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import { api, ApiError } from "../../lib/api";
+import { api, ApiError, API_URL } from "../../lib/api";
 import { useAuthStore } from "../../stores/auth";
 import { Button } from "../../components/ui/Button";
 import { TextInput } from "../../components/ui/TextInput";
 import { StateBanner } from "../../components/ui/StateBanner";
-import { Compass, ShieldCheck, Lock } from "lucide-react";
+import { Compass, ShieldCheck, Lock, Activity } from "lucide-react";
 
 const schema = z.object({
   email: z.string().min(3, "Authorized ID required"),
@@ -42,6 +42,29 @@ export function LoginPage() {
   const login = useAuthStore((s) => s.login);
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState(OPERATOR_CLEARANCES[0].email);
+  const [gatewayStatus, setGatewayStatus] = useState<"checking" | "online" | "waking">("checking");
+  const [slowSubmit, setSlowSubmit] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const checkGateway = async () => {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 4000);
+        const res = await fetch(`${API_URL}/health`, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (active) {
+          setGatewayStatus(res.ok ? "online" : "waking");
+        }
+      } catch {
+        if (active) setGatewayStatus("waking");
+      }
+    };
+    void checkGateway();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const {
     register,
@@ -52,6 +75,16 @@ export function LoginPage() {
     resolver: zodResolver(schema),
     defaultValues: { email: OPERATOR_CLEARANCES[0].email, password: "polar123" }
   });
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    if (isSubmitting) {
+      timer = setTimeout(() => setSlowSubmit(true), 2500);
+    } else {
+      setSlowSubmit(false);
+    }
+    return () => clearTimeout(timer);
+  }, [isSubmitting]);
 
   const selectClearance = (email: string) => {
     setSelectedRole(email);
@@ -97,6 +130,28 @@ export function LoginPage() {
             <br />
             Mission Control Authentication
           </p>
+        </div>
+
+        {/* Gateway Telemetry Pill */}
+        <div className="flex justify-center mb-6">
+          {gatewayStatus === "online" && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 text-xs font-mono text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>SATCOM: CONNECTED (RENDER · NEON DB)</span>
+            </div>
+          )}
+          {gatewayStatus === "waking" && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-950/60 border border-amber-500/30 px-3 py-1 text-xs font-mono text-amber-300">
+              <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
+              <span>SATCOM: WAKING INSTANCE (~30S COLD START)</span>
+            </div>
+          )}
+          {gatewayStatus === "checking" && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-slate-900 border border-slate-700 px-3 py-1 text-xs font-mono text-slate-400">
+              <Activity className="h-3 w-3 animate-spin text-cyan-400" />
+              <span>ESTABLISHING SATCOM LINK...</span>
+            </div>
+          )}
         </div>
 
         {/* Main Card */}
@@ -153,6 +208,12 @@ export function LoginPage() {
               autoComplete="current-password"
               {...register("password")}
             />
+
+            {slowSubmit && (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-950/40 p-2.5 text-xs text-amber-200 text-center animate-pulse">
+                Waking up secure Render cloud gateway... Free-tier cold-start takes ~30 seconds on initial connect.
+              </div>
+            )}
 
             <Button
               type="submit"

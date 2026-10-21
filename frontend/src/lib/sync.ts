@@ -1,9 +1,7 @@
-import { api, ApiError } from "./api";
+import { api, ApiError, API_URL } from "./api";
 import { db, newUuid, type OutboxOp } from "./db";
 import { useAuthStore } from "../stores/auth";
 import { useSyncStore } from "../stores/sync";
-
-const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 export async function refreshPending(): Promise<void> {
   const n = await db.outbox.where("status").equals("pending").count();

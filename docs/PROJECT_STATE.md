@@ -120,6 +120,6 @@ Status: CODE-COMPLETE · 46/46 tests green · deployed topology: Vercel (FE) →
 See docs/known-limitations.md (Bharati-TIMES unify-not-replace, DROMLAN/COSPAS post-hackathon connectors, OSM tiles online-first with cache).
 
 ## Next actions
-1. Fill .github/workflows/keepalive.yml URL after Render deploy
+1. Keepalive configured via .github/workflows/keepalive.yml (pings Render every 10 min)
 2. Export Figma screens/icons into design/ ; convert icon.svg → PNGs
 3. Rehearse docs/demo-script.md (8 min) + Q&A traps

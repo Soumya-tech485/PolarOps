@@ -1,7 +1,13 @@
 import { useAuthStore } from "../stores/auth";
 import { loadSnapshot, saveSnapshot } from "./db";
 
-const API_URL: string = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+const envUrl = import.meta.env.VITE_API_URL;
+export const API_URL: string =
+  typeof envUrl === "string" && envUrl.trim().length > 0
+    ? envUrl.trim().replace(/\/+$/, "")
+    : import.meta.env.DEV
+    ? "http://localhost:8000"
+    : "https://polarops-api-6ki8.onrender.com";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }

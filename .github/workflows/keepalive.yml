@@ -1,0 +1,23 @@
+name: 24/7 Keep-Alive Monitor
+
+on:
+  schedule:
+    # Runs every 10 minutes (UTC) to keep Render free-tier active and prevent spin-down
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    name: Ping PolarOps Render Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Health Endpoint
+        run: |
+          echo "Pinging PolarOps API on Render..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://polarops-api-6ki8.onrender.com/health)
+          echo "Response code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" -eq 200 ]; then
+            echo "Render instance is alive and healthy (24/7 online)."
+          else
+            echo "Received unexpected HTTP status: $HTTP_STATUS (waking up instance...)"
+          fi
