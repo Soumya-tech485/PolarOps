@@ -143,12 +143,12 @@ export function LoginPage() {
 
       {/* Centered Login Card */}
       <main
-        className="relative z-10 w-full flex-1 flex items-center justify-center my-auto py-8 px-4"
-        style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+        className="relative z-10 w-full flex-1 flex flex-col items-center justify-center my-auto py-8 px-4"
+        style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", boxSizing: "border-box" }}
       >
         <div
-          className="w-full max-w-[440px] bg-[#0a1120]/95 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-6 sm:p-8 mx-auto box-border"
-          style={{ width: "100%", maxWidth: "440px", minWidth: "300px", boxSizing: "border-box" }}
+          className="w-full max-w-[440px] bg-[#0a1120]/95 border border-slate-800 shadow-[0_8px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl rounded-2xl p-6 sm:p-8 mx-auto box-border shrink-0"
+          style={{ width: "100%", maxWidth: "440px", minWidth: "280px", flexShrink: 0, boxSizing: "border-box" }}
         >
           {/* Card Header */}
           <div className="text-center mb-6">
@@ -266,8 +266,26 @@ export function LoginPage() {
       </main>
 
       {/* Bottom Footer */}
-      <footer className="relative z-10 text-center text-[11px] text-slate-500 font-mono">
-        SIH26062 · MoES / NCPOR · Indian Antarctic Programme
+      <footer className="relative z-10 text-center text-[11px] text-slate-500 font-mono flex flex-col sm:flex-row items-center justify-center gap-2">
+        <span>SIH26062 · MoES / NCPOR · Indian Antarctic Programme</span>
+        <span className="hidden sm:inline text-slate-700">·</span>
+        <button
+          type="button"
+          onClick={async () => {
+            if ("caches" in window) {
+              const keys = await caches.keys();
+              await Promise.all(keys.map((k) => caches.delete(k)));
+            }
+            if ("serviceWorker" in navigator) {
+              const regs = await navigator.serviceWorker.getRegistrations();
+              await Promise.all(regs.map((r) => r.unregister()));
+            }
+            window.location.reload();
+          }}
+          className="text-slate-500 hover:text-cyan-400 underline underline-offset-2 transition cursor-pointer"
+        >
+          Purge Cache & Reload
+        </button>
       </footer>
     </div>
   );

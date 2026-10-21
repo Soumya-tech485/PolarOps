@@ -7,7 +7,12 @@ import App from "./App";
 import "./styles/theme.css";
 import { startSyncLoop } from "./lib/sync";
 
-registerSW({ immediate: true });
+const updateSW = registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    updateSW(true);
+  }
+});
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false, staleTime: 30_000 } }
