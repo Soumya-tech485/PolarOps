@@ -1,8 +1,9 @@
+```yaml
 name: 24/7 Keep-Alive Monitor
 
 on:
   schedule:
-    # Runs every 10 minutes (UTC) to keep Render free-tier active and prevent spin-down
+    # Runs every 10 minutes (UTC)
     - cron: '*/10 * * * *'
   workflow_dispatch:
 
@@ -10,14 +11,47 @@ jobs:
   keepalive:
     name: Ping PolarOps Render Backend
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
       - name: Ping Health Endpoint
+        shell: bash
         run: |
-          echo "Pinging PolarOps API on Render..."
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://polarops-api-6ki8.onrender.com/health)
-          echo "Response code: $HTTP_STATUS"
-          if [ "$HTTP_STATUS" -eq 200 ]; then
-            echo "Render instance is alive and healthy (24/7 online)."
-          else
-            echo "Received unexpected HTTP status: $HTTP_STATUS (waking up instance...)"
-          fi
+          set -uo pipefail
+
+          URL="https://polarops-api-6ki8.onrender.com/health"
+          MAX_ATTEMPTS=3
+
+          echo "Pinging PolarOps API health endpoint..."
+
+          for attempt in $(seq 1 "$MAX_ATTEMPTS"); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS"
+
+            HTTP_STATUS=$(curl \
+              --silent \
+              --show-error \
+              --location \
+              --connect-timeout 30 \
+              --max-time 120 \
+              --output /dev/null \
+              --write-out "%{http_code}" \
+              "$URL") 
+            CURL_EXIT=$?
+
+            if [ "$CURL_EXIT" -eq 0 ] &&
+               [ "$HTTP_STATUS" = "200" ]; then
+              echo "PolarOps health check passed."
+              exit 0
+            fi
+
+            echo "Request failed: curl exit=$CURL_EXIT, HTTP status=${HTTP_STATUS:-none}"
+
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Waiting 15 seconds before retry..."
+              sleep 15
+            fi
+          done
+
+          echo "ERROR: PolarOps health check failed after $MAX_ATTEMPTS attempts."
+          exit 1
+```
